@@ -1,0 +1,15 @@
+Design Session 27/01/2025
+To do:
+
+Order new ball screw for steering
+
+Design mount for encoder
+Print mount
+
+Design adapter for the encoder
+Print adapter
+
+Design mount for potentiometer
+Print mount for potentiometer
+
+Print mount for motor for steering
