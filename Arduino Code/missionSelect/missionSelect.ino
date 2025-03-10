@@ -1,21 +1,28 @@
 
+bool asOff, asReady, asDriving, asFinished, asEmergency, manualD;
+int yellow, blue;
+
 int mode = 7;
 int prevMode = mode;
+
 const int cyclePin = 2;
 const int selectPin = 3;
+
 bool selected = false;
 bool interrupt = false;
 
 void setup() {
   Serial.begin(9600);
 
+  ASSI_Setup();
+
+  pinMode(6, OUTPUT);
   pinMode(7, OUTPUT);
   pinMode(8, OUTPUT);
   pinMode(9, OUTPUT);
   pinMode(10, OUTPUT);
   pinMode(11, OUTPUT);
   pinMode(12, OUTPUT);
-  pinMode(13, OUTPUT);
 
   pinMode(cyclePin, INPUT);
   pinMode(selectPin, INPUT);
@@ -57,6 +64,8 @@ void loop() {
     interrupt = false;
     prevMode = mode;
   }
+
+  ASSI();
 }
 
 void blink(int Pin) {
