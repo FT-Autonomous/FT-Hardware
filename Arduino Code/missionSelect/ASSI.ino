@@ -28,7 +28,7 @@ void ASSI() {
   }
 
   if (asDriving) {
-    blink(yellow);
+    blink2(yellow);
     digitalWrite(blue, LOW);
   }
 
@@ -38,7 +38,7 @@ void ASSI() {
   }
 
   if (asEmergency) {
-    blink(blue);
+    blink2(blue);
     digitalWrite(yellow, LOW);
   }
 
