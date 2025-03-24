@@ -1,11 +1,14 @@
 
+bool asOff, asReady, asDriving, asFinished, asEmergency, manualD;
+int yellow, blue;
+
 void ASSI_Setup() {
   //initalise default/starting states
   asOff = false;
   asReady = false;
-  asDriving = true;
+  asDriving = false;
   asFinished = false;
-  asEmergency = false;
+  asEmergency = true;
   manualD = false;
 
   //intilise pins
