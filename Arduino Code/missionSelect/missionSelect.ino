@@ -5,20 +5,17 @@ double prevT, currT;
 bool firstBlink2 = true;
 double prevT2, currT2;
 
-
-
 //************************************
 
 
 int LedPinMax = 12;
-int LedPinMin = 6;
+int LedPinMin = 6; //pin range of LED array mission select 
 
 int mode = LedPinMin;
 int prevMode = mode;
 
 const int cyclePin = 2;
 const int selectPin = 3;
-
 
 bool selected = false;
 bool interrupt = false;
