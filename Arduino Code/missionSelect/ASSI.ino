@@ -1,19 +1,23 @@
 
 bool asOff, asReady, asDriving, asFinished, asEmergency, manualD;
+
+bool notReady; // this means timer elapsed without entering go.
+
 bool EBS, done, moving, go;  //Serial variables: Emergency Break system, Mission done and currently moving
+
 int yellow, blue;
 double initialT;
 
-//variables for ASSI
-
+//run this function in setup to ready everything needed for the ASSI functionw
 void ASSI_Setup() {
   //initalise default/starting states
   asOff = false;
   asReady = false;
   asDriving = false;
   asFinished = false;
-  asEmergency = true;
+  asEmergency = false;
   manualD = false;
+  notReady = false;
 
   //intilise pins
 
@@ -23,6 +27,7 @@ void ASSI_Setup() {
   pinMode(blue, OUTPUT);
 }
 
+// Set the ASSI LEDs according to global booleans
 void ASSI_LED() {
   if (asOff) {
     digitalWrite(yellow, LOW);
@@ -59,8 +64,8 @@ void ASSI() {
   double timer;  //current T for asReady Timer
   asOff = false;
 
-  if (EBS) {  //if EBS is engaged
-    asDriving = false; //couldnt possibly be driving if break is pulled
+  if (EBS) {            //if EBS is engaged
+    asDriving = false;  //couldnt possibly be driving if break is pulled
     asReady = false;
     if (!moving && done) {
       asFinished = true;
@@ -68,7 +73,7 @@ void ASSI() {
       asEmergency = true;
     }
   } else {  // if EBS isnt engaged check if mission has been set
-    if (selected) {
+    if (selected && !notReady) {
 
       if (!asReady) {
         initialT = (millis() / 1000);  //start the timer for asReady
@@ -77,8 +82,8 @@ void ASSI() {
       asReady = true;
 
     } else {
-      asOff = true;
       asReady = false;
+      asOff = true;
     }
   }
 
@@ -89,7 +94,12 @@ void ASSI() {
       asReady = false;
       asDriving = true;
     }
-    
+
+    if (timer > 30) {
+      asReady = false;
+      asOff = true;
+      notReady = true;
+    }
   }
 
   ASSI_LED();  //set LEDs based on booleans

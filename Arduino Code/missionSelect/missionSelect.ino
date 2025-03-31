@@ -7,7 +7,6 @@ double prevT2, currT2;
 
 //************************************
 
-
 int LedPinMax = 12;
 int LedPinMin = 6; //pin range of LED array mission select 
 
@@ -25,16 +24,6 @@ void setup() {
 
   ASSI_Setup();
 
-  /*
-    pinMode(6, OUTPUT);
-    pinMode(7, OUTPUT);
-    pinMode(8, OUTPUT);
-    pinMode(9, OUTPUT);
-    pinMode(10, OUTPUT);
-    pinMode(11, OUTPUT);
-    pinMode(12, OUTPUT);
-  //*/
-
   for (int i = LedPinMin; i < LedPinMax; i++) {
     pinMode(i, OUTPUT);
   }
@@ -42,12 +31,12 @@ void setup() {
   pinMode(cyclePin, INPUT);
   pinMode(selectPin, INPUT);
 
-  attachInterrupt(digitalPinToInterrupt(cyclePin), cycleButton, RISING);  //rightEncoderInterrupt will run when the pin CHANGES VALUE
+  attachInterrupt(digitalPinToInterrupt(cyclePin), cycleButton, RISING);
   attachInterrupt(digitalPinToInterrupt(selectPin), selectButton, RISING);
 }
 
 void cycleButton() {
-  while (!interrupt) {
+  while (!interrupt && !selected) {
     mode++;
     interrupt = true;
   }
@@ -58,7 +47,7 @@ void selectButton() {
 }
 
 void loop() {
-  Serial.println(mode);
+  //Serial.println(mode);
 
   if (!selected) {  // code that blinks not selected LED
     blink(mode);
@@ -82,9 +71,10 @@ void loop() {
     delay(250);
     interrupt = false;
   }
-
+  checkSerial();
   ASSI();
 }
+
 // Cleavon was here
 void blink(int Pin) {
   currT = (millis() / 1000);  //get time in integer seconds
@@ -102,7 +92,6 @@ void blink(int Pin) {
     }
   }
 }
-
 void blink2(int Pin) {
   currT2 = (millis() / 1000);  //get time in integer seconds
 
