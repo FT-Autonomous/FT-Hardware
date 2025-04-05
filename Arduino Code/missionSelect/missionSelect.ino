@@ -7,26 +7,28 @@ double prevT2, currT2;
 
 //************************************
 
-int LedPinMax = 12;
-int LedPinMin = 6; //pin range of LED array mission select 
+const int ledPinMax = 12;
+const int ledPinMin = 6;  //pin range of LED array mission select
 
-int mode = LedPinMin;
+int mode = ledPinMin;  //test
 int prevMode = mode;
 
 const int cyclePin = 2;
-const int selectPin = 3;
+const int selectPin = 3;D
 
 bool selected = false;
-bool interrupt = false;
+bool interrupted = false;
+
+//************************************
 
 void setup() {
   Serial.begin(9600);
 
   ASSI_Setup();
 
-  for (int i = LedPinMin; i < LedPinMax; i++) {
+  for (int i = ledPinMin; i < ledPinMax; i++) {
     pinMode(i, OUTPUT);
-  }
+  }  //set pinmode for missionSelect LED range
 
   pinMode(cyclePin, INPUT);
   pinMode(selectPin, INPUT);
@@ -36,9 +38,9 @@ void setup() {
 }
 
 void cycleButton() {
-  while (!interrupt && !selected) {
+  if (!interrupted && !selected) { //this was set as while for some reason, I see no reason for this and dont remember it having caused an issue before so now using IF instead
     mode++;
-    interrupt = true;
+    interrupted = true;
   }
 }  // code that cycles mode when appropriate button pressed
 
@@ -47,21 +49,20 @@ void selectButton() {
 }
 
 void loop() {
-  //Serial.println(mode);
 
-  if (!selected) {  // code that blinks not selected LED
-    blink(mode);
+  if (!selected) {  // if no mode has been selected yet
+    blink(mode);    //blink the LED corresponding to the current mode being conidered
   } else {
-    digitalWrite(mode, HIGH);
+    digitalWrite(mode, HIGH);  //display chosen mode
   }
 
-  if (mode > LedPinMax) {
-    mode = LedPinMin;
-  }
+  if (mode > ledPinMax) {
+    mode = ledPinMin;
+  } //loop back around if we have cycled out of bounds
 
-  if (prevMode > LedPinMax) {
-    prevMode = LedPinMin;
-    interrupt = false;
+  if (prevMode > ledPinMax) {
+    prevMode = ledPinMin;
+    interrupted = false;
   }
 
   if (mode != prevMode) {
@@ -69,8 +70,9 @@ void loop() {
     prevMode = mode;
     firstBlink = true;
     delay(250);
-    interrupt = false;
+    interrupted = false;
   }
+  
   checkSerial();
   ASSI();
 }
