@@ -101,6 +101,6 @@ void ASSI() {
       notReady = true;
     }
   }
-
+  decode(10);
   ASSI_LED();  //set LEDs based on booleans
 }
