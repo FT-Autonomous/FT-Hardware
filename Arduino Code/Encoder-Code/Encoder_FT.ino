@@ -76,8 +76,12 @@ void loop() {
 
   if(Serial.available() > 0)
   {
-    v_target = Serial.read(); 
-  }
+    v_target = Serial.parseFloat();
+    if(v_input != 0)
+   {  
+     v_target = v_input; // this allows to update the input using the serial mon.
+   }
+  } 
 
   unsigned long currentTime = millis();
   
