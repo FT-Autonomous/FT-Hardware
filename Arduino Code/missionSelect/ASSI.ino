@@ -73,6 +73,7 @@ void ASSI() {
       asEmergency = true;
     }
   } else {  // if EBS isnt engaged check if mission has been set
+  
     if (selected && !notReady) {
 
       if (!asReady) {

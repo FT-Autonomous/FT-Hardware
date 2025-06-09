@@ -14,7 +14,7 @@ int mode = ledPinMin;  //test
 int prevMode = mode;
 
 const int cyclePin = 2;
-const int selectPin = 3;D
+const int selectPin = 3;
 
 bool selected = false;
 bool interrupted = false;
