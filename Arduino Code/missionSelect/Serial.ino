@@ -14,6 +14,9 @@ void checkSerial() {
   if (Serial.available() > 0) {
     received = Serial.read(); // Serial.read() retruns a char NOT an int. so storing it this way wont store what was entered but instead the ASCII of what was entered.
     
+    //https://theasciicode.com.ar/ascii-printable-characters/capital-letter-a-uppercase-ascii-code-65.html
+    //this link displays what value which chars are stored as
+
     if(received != 10){       //10 corresponds to the Enter Key which needs to be ignored
       received = received - 48; //the ascii for 0 is 48
       Serial.println(received);
