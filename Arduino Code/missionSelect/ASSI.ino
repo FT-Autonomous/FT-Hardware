@@ -1,7 +1,7 @@
 
 bool asOff, asReady, asDriving, asFinished, asEmergency, manualD;
 
-bool notReady; // this means timer elapsed without entering go.
+bool notReady;  // this means timer elapsed without entering go.
 
 bool EBS, done, moving, go;  //Serial variables: Emergency Break system, Mission done and currently moving
 
@@ -64,44 +64,45 @@ void ASSI() {
   double timer;  //current T for asReady Timer
   asOff = false;
 
-  if (EBS) {            //if EBS is engaged
-    asDriving = false;  //couldnt possibly be driving if break is pulled
-    asReady = false;
-    if (!moving && done) {
-      asFinished = true;
-    } else {
-      asEmergency = true;
-    }
-  } else {  // if EBS isnt engaged check if mission has been set
-  
-    if (selected && !notReady) {
+  if (asEmergency == false) {
 
-      if (!asReady) {
-        initialT = (millis() / 1000);  //start the timer for asReady
+    if (EBS) {            //if EBS is engaged
+      asDriving = false;  //couldnt possibly be driving if break is pulled
+      asReady = false;
+      if (!moving && done) {
+        asFinished = true;
+      } else {
+        asEmergency = true;
+      }
+    } else {  // if EBS isnt engaged check if mission has been set
+
+      if (selected && !notReady) {
+
+        if (!asReady) {
+          initialT = (millis() / 1000);  //start the timer for asReady
+        }
+
+        asReady = true;
+
+      } else {
+        asReady = false;
+        asOff = true;
+      }
+    }
+
+    if (asReady && !asDriving) {
+      timer = (millis() / 1000) - initialT;  //update timer
+
+      if ((timer >= 5) && (timer < 30) && go) {
+        asReady = false;
+        asDriving = true;
       }
 
-      asReady = true;
-
-    } else {
-      asReady = false;
-      asOff = true;
+      if (timer > 30) {
+        asEmergency = true;
+        asReady = false;
+      }
     }
   }
-
-  if (asReady && !asDriving) {
-    timer = (millis() / 1000) - initialT;  //update timer
-
-    if ((timer >= 5) && (timer < 30) && go) {
-      asReady = false;
-      asDriving = true;
-    }
-
-    if (timer > 30) {
-      asReady = false;
-      asOff = true;
-      notReady = true;
-    }
-  }
-  decode(10);
   ASSI_LED();  //set LEDs based on booleans
 }
