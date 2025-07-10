@@ -38,7 +38,7 @@ void setup() {
 }
 
 void cycleButton() {
-  if (!interrupted && !selected) { //this was set as while for some reason, I see no reason for this and dont remember it having caused an issue before so now using IF instead
+  if (!interrupted && !selected) {  //this was set as while for some reason, I see no reason for this and dont remember it having caused an issue before so now using IF instead
     mode++;
     interrupted = true;
   }
@@ -52,13 +52,14 @@ void loop() {
 
   if (!selected) {  // if no mode has been selected yet
     blink(mode);    //blink the LED corresponding to the current mode being conidered
+    Serial.println(mode);
   } else {
     digitalWrite(mode, HIGH);  //display chosen mode
   }
 
   if (mode > ledPinMax) {
     mode = ledPinMin;
-  } //loop back around if we have cycled out of bounds
+  }  //loop back around if we have cycled out of bounds
 
   if (prevMode > ledPinMax) {
     prevMode = ledPinMin;
@@ -72,8 +73,8 @@ void loop() {
     delay(250);
     interrupted = false;
   }
-  
-  checkSerial();
+  if (selected)
+    checkSerial();
   ASSI();
 }
 
