@@ -5,7 +5,7 @@ bool notReady;  // this means timer elapsed without entering go.
 
 bool EBS, done, moving, go;  //Serial variables: Emergency Break system, Mission done and currently moving
 
-int yellow, blue;
+int yellow, blue; //yellow and blue being the colors of the corresponding LEDs
 double initialT;
 
 //run this function in setup to ready everything needed for the ASSI functionw
@@ -105,4 +105,8 @@ void ASSI() {
     }
   }
   ASSI_LED();  //set LEDs based on booleans
+}
+
+void reportAS(){
+  
 }

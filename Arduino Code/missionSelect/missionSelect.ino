@@ -25,7 +25,8 @@ void setup() {
   Serial.begin(9600);
 
   ASSI_Setup();
-
+  //initialise all the pins needed for the ASSI LEDs and buttons 
+  
   for (int i = ledPinMin; i < ledPinMax; i++) {
     pinMode(i, OUTPUT);
   }  //set pinmode for missionSelect LED range
@@ -52,7 +53,7 @@ void loop() {
 
   if (!selected) {  // if no mode has been selected yet
     blink(mode);    //blink the LED corresponding to the current mode being conidered
-    Serial.println(mode);
+    //Serial.println(mode);
   } else {
     digitalWrite(mode, HIGH);  //display chosen mode
   }
@@ -73,8 +74,10 @@ void loop() {
     delay(250);
     interrupted = false;
   }
+
   if (selected)
     checkSerial();
+
   ASSI();
 }
 

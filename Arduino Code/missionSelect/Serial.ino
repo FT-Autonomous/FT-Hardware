@@ -24,6 +24,7 @@ void checkSerial() {
         received = received - 48;  //the ascii for 0 is 48
       Serial.println(received);
       Serial.println("---");
+      sendMode();
       decode(received);
     }
   }
@@ -45,3 +46,8 @@ void decode(int val) {
   EBS = (val >> 3) & 0b0001;     // MSB (bit 3)
 
 }  //set serial booleans according to integer recieved over serial
+
+void sendMode(){
+  Serial.write(mode - ledPinMin + 1 ); //mode is the pin for the currently selected LED current range is 
+}
+
