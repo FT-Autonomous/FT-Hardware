@@ -24,7 +24,7 @@ void checkSerial() {
         received = received - 48;  //the ascii for 0 is 48
       Serial.println(received);
       Serial.println("---");
-      sendMode();
+      //sendMode();
       decode(received);
     }
   }
@@ -49,5 +49,5 @@ void decode(int val) {
 
 void sendMode(){
   Serial.write(mode - ledPinMin + 1 ); //mode is the pin for the currently selected LED current range is 
-}
+}//TODO: Evaluate if this is needed or was just a misunderstanding (all we actually need is reportAS())
 

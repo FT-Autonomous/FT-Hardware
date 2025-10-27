@@ -108,5 +108,5 @@ void ASSI() {
 }
 
 void reportAS(){
-  
+  //TODO: send the AS status over serial after the state machine has decided it.
 }
