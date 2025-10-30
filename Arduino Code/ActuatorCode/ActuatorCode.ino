@@ -4,12 +4,13 @@ int pinB = 11;
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
+  Serial.println("----------------------");
   pinMode(pinA, OUTPUT);
   pinMode(pinB, OUTPUT);
 }
 
 int st = 2000; // delay
-int aVal = 75;
+int aVal = 100;
 int bVal = 100;
 
 void loop() {
@@ -21,7 +22,7 @@ void loop() {
   delay(st);
 
   a(aVal);
-  Serial.println("A high");
+  Serial.println("A high: Extend");
 
   delay(st);
 
@@ -31,9 +32,11 @@ void loop() {
   delay(st);
   
   b(bVal);
-  Serial.println("b high");
+  Serial.println("b high: Retract");
 
   delay(st);
+
+  Serial.println("----------------------");
 }
 
 void a(int state){
