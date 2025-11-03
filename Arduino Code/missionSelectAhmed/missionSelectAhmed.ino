@@ -240,6 +240,7 @@ void ASSI() {
       }
     }
   }
+  sendMode();
   ASSI_LED();  //set LEDs based on booleans
 }
 
@@ -285,3 +286,21 @@ void decode(int val) {
   EBS = (val >> 3) & 0b0001;     // MSB (bit 3)
 
 }  //set serial booleans according to integer recieved over serial
+
+void sendMode(){
+  //bool asOff, asReady, asDriving, asFinished, asEmergency, manualD;
+  if( asOff )
+    send("O");
+  else if ( asReady )
+    send("R");
+  else if ( asDriving )
+    send("D");
+  else if ( asFinished ){
+    send( "E" );
+  }
+}
+
+void send(String temp){
+  Serial.println(temp);
+}
+

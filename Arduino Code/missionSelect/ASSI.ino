@@ -104,6 +104,7 @@ void ASSI() {
       }
     }
   }
+  sendMode();
   ASSI_LED();  //set LEDs based on booleans
 }
 

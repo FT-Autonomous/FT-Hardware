@@ -9,7 +9,6 @@ int received;
     good postion, need to decide on direction to proceed
 */
 
-
 void checkSerial() {
   if (Serial.available() > 0) {
     received = Serial.read();  // Serial.read() retruns a char NOT an int. so storing it this way wont store what was entered but instead the ASCII of what was entered.
@@ -48,6 +47,19 @@ void decode(int val) {
 }  //set serial booleans according to integer recieved over serial
 
 void sendMode(){
-  Serial.write(mode - ledPinMin + 1 ); //mode is the pin for the currently selected LED current range is 
-}//TODO: Evaluate if this is needed or was just a misunderstanding (all we actually need is reportAS())
+  //bool asOff, asReady, asDriving, asFinished, asEmergency, manualD;
+  if( asOff )
+    send("O");
+  else if ( asReady )
+    send("R");
+  else if ( asDriving )
+    send("D");
+  else if ( asFinished ){
+    send( "E" );
+  }
+}
+
+void send(String temp){
+  Serial.println(temp);
+}
 
