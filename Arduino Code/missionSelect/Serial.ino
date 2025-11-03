@@ -21,8 +21,8 @@ void checkSerial() {
         received = received - 55;
       } else
         received = received - 48;  //the ascii for 0 is 48
-      Serial.println(received);
-      Serial.println("---");
+      //Serial.println(received);
+      //Serial.println("---");
       //sendMode();
       decode(received);
     }
