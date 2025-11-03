@@ -1,12 +1,9 @@
 int received;
 
 /*
+  The ASmode is being sent to jetson successfully
   TODO
-  Need to figure out how this information is going to arrive (sentinal controlled strings or Hex or shannon fano style codes )
-    so that a processing scheme can be made accordingly (this should be simple since atm we can enter chars on the serial monitor to be stored in "recieved")
-
-    need to figure out how its meant to look when working then test and fix the "decode()" function
-    good postion, need to decide on direction to proceed
+  When python is done processing the ASmode data we need to setup another send function that tells the jetson what mode was set by the buttons
 */
 
 void checkSerial() {
