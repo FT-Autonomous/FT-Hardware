@@ -15,7 +15,7 @@ def ASSI_Mode(x):
         "D": '2',  # Drive (0011)
         "F": '3',  # Finished (0100)
         "E": '4'  # Emergency (1000)
-        #"M": '5',  # Manual Overide (ignore these 2 for now)
+        #"M": '5',  # Manual Overide (ignore these 2 for now) 
         #"N": '6'   # Not Ready
     }
 
@@ -23,7 +23,7 @@ def ASSI_Mode(x):
 
 
     if x in command_map:
-        hex_char = command_map[x]   # Map out the char that was just sent (we convert char -> hex in python and then it fucks off to the arduino)
+        hex_char = command_map[x]   # Map out the char that was just sent (we convert char -> hex in python and then it fucks goes to the arduino)
         #print("Sending:", x,"In char", hex_char, "In int:", int(hex_char))
         ser.write(b'hex_char')
         res = []
@@ -49,17 +49,8 @@ while True:
 
 
 #To DO
-# Big one: Kill myself
-# Another one: Ensure that the value entred is consatnly updated so the arduino can
+# Another one: Ensure that the value entred is consatnly updated so the arduino can repsond, watch out for the buffer
 
-#if ser.is_open:
-#  print("Rigby controller active") #safety check
-#else:
-# print("Try again") 
-# exit()
 
-#ser.write(b'Sup Bruz\n')
-#print("Message sent.")  
-#ser.close()
 
 
