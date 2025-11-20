@@ -3,6 +3,8 @@ int pot = A3; // Analog read
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
+  #define MOTOR_F 5
+  #define MOTOR_B 6
 
 }
 
@@ -35,27 +37,34 @@ void loop() {
    int value = analogRead(pot);
    angle_current = map(value, 0, 1023, -angle_max, angle_max); // Map out the angle to (-39 and 39 degrees the max the pot will go)
    angle_current = round(angle_current * 10) / 10.0;
-}
 
-int pwm_target = ((angle_target / angle_max) * 255); // feed the PID a value between 0-255, it converts the target velocity from m/s to target pwn val.
-int pwm_current = ((angle_current / angle_max) * 255); // PWM 
-error = pwm_target - pwm_current;
-correction = (error * kp);
-pwm = pwm_current + correction;
-pwm = constrain(pwm, 0, 255);
+   int pwm_target = ((angle_target / angle_max) * 255); // feed the PID a value between 0-255, it converts the target velocity from m/s to target pwn val.
+   int pwm_current = ((angle_current / angle_max) * 255); // PWM 
+   error = pwm_target - pwm_current;
+   correction = (error * kp);
+   pwm = pwm_current + correction;
+   pwm = constrain(pwm, 0, 255);
 
- Serial.print(angle_target);
-   Serial.print("Goal: ");
+   Serial.print(angle_target);
+   Serial.print(" Goal: ");
 
 
    Serial.print(angle_current);
-   Serial.print("Current: ");
+   Serial.print(" Current: ");
 
    Serial.print(correction);
-    Serial.print("err: ");
+   Serial.print(" err: ");
 
+   Serial.println(angle_current);
+   Serial.print(" new:  ");
 
-    Serial.print(pwm);
+    //pulseCount = 0; // Reset pulse count
+    lastTime = currentTime; // Update time
+    analogWrite(MOTOR_F, pwm);
+    analogWrite(MOTOR_B, -pwm);
+}
+
+    //Serial.print(pwm);
 
 
    //  Serial.print(" ");
@@ -64,16 +73,7 @@ pwm = constrain(pwm, 0, 255);
 
    // Serial.print(" ");
 
-    Serial.print(angle_target);
-    Serial.print("New_t ");
+    //Serial.print(angle_target);
+    //Serial.print("New_t ");
 
-
-    Serial.println(angle_current);
-    Serial.print("curr_t ");
-
-
-
-
-    //pulseCount = 0; // Reset pulse count
-    lastTime = currentTime; // Update time
   }
