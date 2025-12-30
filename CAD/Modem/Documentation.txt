@@ -1,5 +1,0 @@
-Ignore the file "screw it" - it is for the screw bit on the modem casing top if it snaps off, but realistically just reprint it.
-The STL files should match the SolidWorks files, same with the 3mf files - those are optimised for a Bambu A1.
-The modem insides file is inaccurate. It is loosely right, but is particularly wrong around the I/O interface.
-
-You should be able to just directly print from the 3mf files and it should work, but you might have to sand around the I/O connectors.
