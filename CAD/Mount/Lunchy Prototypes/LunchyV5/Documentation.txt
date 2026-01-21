@@ -15,3 +15,6 @@
 Maximized creating fillets on any long straight corner - this reduces elephant footing and warping in the 3d printing process.
 I am concerned that the number of holes on each side might reduce the waterproofing, I know they will be covered with sponsors, but it is an extra point of failure.
         - will create alternate Lunchy where each panel is one side of the case, then we can fuck with sponsors on that panel. Body stays the same each year, but panel gets reprinted.
+
+
+##Now after Christmas trying to fix design, confident 5 would have printed, however I am unhappy with the sponsor tile solution. Want to try a picture frame solution so will create V6, hopefully reusing all same dimensions from V5 except wall thickness to 4mm (2mm back, 1mm plate, 1mm frame) to accommodate.
