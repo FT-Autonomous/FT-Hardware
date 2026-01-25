@@ -1,0 +1,82 @@
+Important Information:
+
+Model: Archer C50 (EU) - Ver: 6.20
+Full name: Archer C50 AC1200 Dual Band Wi-Fi Router.
+Power: 9V - 0.85A
+Default Access: http://tplinkwifi.net
+Wireless Password/Pin: 47142855
+
+Link to product specs: https://www.tp-link.com/uk/home-networking/wifi-router/archer-c50/#specifications
+Link to product manual: https://www.tp-link.com/uk/support/download/archer-c50/ (pdf available in directory with modem CAD files)
+
+You can see a picture of the original UI lighting and info-card in the reference pictures saved alongside the CAD files.
+
+Lighting Meanings (from left to right):
+
+	Power:
+		On (solid): Router is powered on and running normally (if you came here to figure out what this means, I have no hope for you).
+		Slow Flashing: System is starting up or firmware is updating. Do not disconnect or power off.
+		Quick Flashing: WPS connection in progress.
+		Off: No power (please make sure it is plugged in AND On button pressed, also it takes ~30s to fully turn on after starting, so wait before being sure it's dead).
+	
+	Wi-Fi (2.4 GHz):
+		Ignore this, considering we removed the antennas - however I wrote out what you need to know anyway.
+		On: The 2.4 GHz band is enabled.
+		Off: Use your brain.
+		
+	Wi-Fi (5 GHz):
+		Ignore this, considering we removed the antennas - however I wrote out what you need to know anyway.
+		On: The 2.4 GHz band is enabled.
+		Off: Use your brain.
+
+	Ethernet/LAN:
+		Note: I snapped this light on 24/01/2026. If you open the modem and the LED is straight up not there, that's on me - my bad.
+		On: At least 1 Ethernet port is connected to a powered-on device.
+		Off: No Ethernet port connected (or detected). Cry.
+
+	Internet/WAN:
+		Green On: Internet Service is available.
+		Orange On: Internet Port is connected, but internet is not available.
+		Off: Router's internet port is not connected.
+
+	(4 LEDs should be green, the rightmost changes between green and orange so requires colour changing LED.)
+
+
+Buttons:
+	WPS/Wi-Fi Button (to left of ethernet ports)
+	Power On/Off Button (to right of ethernet ports, beside plug)
+	Reset Button (need pin to poke, below WPS/Wi-Fi Button)
+
+Using back panel (ripped from user manual):
+
+	Wi-Fi/WPS Button:
+		Press this button for 1 second, and immediately press the WPS button on your device.
+		The Power LED of the router should change from flashing to solid on, indicating successful WPS connection.
+
+		Press and hold this button for about 5 seconds to turn on or off the wireless function of your router.
+
+	Reset Button:
+		Press and hold this button for 2 seconds until all LEDs turn off to reset the router to its factory default settings.
+
+	WAN Port:
+		For connecting to a DSL/Cable modem, or an Ethernet port.
+
+	LAN Ports (1/2/3/4):
+		 For connecting your PCs or other wired network devices to the router.
+
+
+Frequently Asked Questions:
+	Q: Does the modem work wirelessly?
+	A: No, per FSUK rules this expensive wireless modem does not work wirelessly.
+
+	Q: Are you aware you could have gotten a much cheaper product considering you didn't even need 95% of what this does?
+	A: Yes, but we are just silly guys (non-gender specifically :D).
+
+	Q: Is the 3d printed mini-case gigantically over-engineered?
+	A: Of course is it, anything Conor works on ends up way too complicated compared to the actual use case.
+
+	Q: Why is the 4th LED missing?
+	A: Conor is an idiot and broke it but didn't have a soldering iron and extra LED handy.
+
+	Q: Why do you need an FAQ for how to boot a modem that doesn't answer anything to do with the modem or how to use it?
+	A: Conor thought it was funny at the start and now regrets it because it's corny AF and he was just really bored D:.

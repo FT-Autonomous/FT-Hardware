@@ -7,5 +7,9 @@
 - Do a picture frame design, covered in the Lunchy MS Whiteboard.
 - Focus on adding camera mount to base plate secondly as should be easier concept to incorporate into Lunchy (but separate thing to Lunchy).
 
+##Still needed to change
+- Need to add in wall positioning for modem casing to slot
+- Need to add in screw holes for connecting base plate to lunchy body.
+
 
 (Note on naming of files - once I update a file from the previous model or remake it, the number changes to the current version. If the design ends up with 0 changes between version x and x+1, the name stays.) product_x
