@@ -1,0 +1,16 @@
+##Main idea:
+- After printing and testing of spacing, current Lunchy design is too small. Everything fits, but there is no clearance for wiring.
+- For cabling, we will add a tuxedo-style back to V7 so the wires can run out and down (matching how the top design looks.
+- For sponsor plates, the bottom piece was too flimsy and potentially unnecessary. Will attempt a design without it while using friction to keep the pieces in.
+- Screws to attach Lunchy to Basey and Basey to Base Plate will now extrude as they were too hard to access going in from side. This will also help with Lunchy design for ADS keeping it easier to install.
+- We will develop a separate test-bench style holder for the parts to be printed in PETG so they can stay together with/without Lunchy support (including Modem)
+- The front access for the LiDAR cable will now be in Basey
+
+##Mid-Development log
+- New naming scheme implemented :D.
+- Tuxedo-style back added, decided that it doesn't need to go below where Lunchy already stops because we're simply protecting from water, not other elements.
+- Removed extra cabling things. Yet to add new cabling for front to Basey.
+- Left a small disconnect between tux and rest of box to allow compliant mechanism, I would fear random people operating it could snap, so gave it some built-in flex.
+
+
+(Note, Basey is my new unofficial term for the Lunchy base plate, distinguishing it from the actual base plate Lunchy as a whole will be mounted on, naturally the lid will now be Liddy).
