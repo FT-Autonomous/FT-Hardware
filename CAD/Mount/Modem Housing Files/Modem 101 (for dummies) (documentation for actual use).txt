@@ -47,7 +47,7 @@ Buttons:
 	Power On/Off Button (to right of ethernet ports, beside plug)
 	Reset Button (need pin to poke, below WPS/Wi-Fi Button)
 
-Using back panel (ripped from user manual):
+Using back panel (mostly ripped from user manual):
 
 	Wi-Fi/WPS Button:
 		Press this button for 1 second, and immediately press the WPS button on your device.
