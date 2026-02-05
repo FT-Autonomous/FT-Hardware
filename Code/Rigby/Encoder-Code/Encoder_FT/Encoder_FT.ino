@@ -51,7 +51,6 @@ void encoderISR() {
 
 void setup() {
   Serial.begin(9600);
-  Serial.setTimeout(1000);
   
   // Set up encoder pins
   pinMode(ENCODER_A, INPUT_PULLUP);
@@ -76,7 +75,7 @@ void loop() {
 
   if(Serial.available() > 0)
   {
-    v_input = Serial.parseFloat();
+    v_input = readFloatFromSerial();
     if(v_input != 0.0)
    {  
      v_target = v_input; // this allows to update the input using the serial mon.
@@ -166,6 +165,58 @@ void loop() {
 
 
 
+}
+
+
+String readSerialWithStartEndMarkers(){ // remember to put '<' and '>' before and after your serial command
+  static boolean reading=false;
+  static byte ndx=0;
+  char startMarker='<';
+  char endMarker='>';
+  char readCharacter;
+
+  const byte numChars=32;
+  char receivedCharacters[numChars];
+  boolean newData=false;
+
+
+  while(Serial.available()>0&&!newData){
+    readCharacter=Serial.read();
+
+    if(reading){
+      if(readCharacter!=endMarker){
+        receivedCharacters[ndx++] = readCharacter;
+        if(ndx>=numChars){
+          ndx=numChars-1;
+        }
+      }
+      else{
+        receivedCharacters[ndx]='\0';
+        reading=false;
+        ndx=0;
+        newData=true;
+      }
+    }
+
+    else if(readCharacter==startMarker){
+      reading=true;
+    }
+  }
+
+  if(newData){
+    return receivedCharacters;
+  } else {
+    return "";
+  }
+}
+
+float readFloatFromSerial(){
+  String serialInput = readSerialWithStartEndMarkers();
+  if(serialInput!=""){
+    return (serialInput.toFloat());
+  } else {
+    return 0.0;
+  }
 }
 
 // to do:
