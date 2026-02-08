@@ -168,50 +168,33 @@ void loop() {
 }
 
 
-String readSerialWithStartEndMarkers(){ // remember to put '<' and '>' before and after your serial command
-  static boolean reading=false;
+String readSerialUntilNewline(){ // type your value and press Enter
   static byte ndx=0;
-  char startMarker='<';
-  char endMarker='>';
   char readCharacter;
-
   const byte numChars=32;
-  char receivedCharacters[numChars];
-  boolean newData=false;
+  static char receivedCharacters[numChars];
 
-
-  while(Serial.available()>0&&!newData){
+  while(Serial.available()>0){
     readCharacter=Serial.read();
 
-    if(reading){
-      if(readCharacter!=endMarker){
-        receivedCharacters[ndx++] = readCharacter;
-        if(ndx>=numChars){
-          ndx=numChars-1;
-        }
-      }
-      else{
-        receivedCharacters[ndx]='\0';
-        reading=false;
-        ndx=0;
-        newData=true;
-      }
+    if(readCharacter=='\n'){
+      receivedCharacters[ndx]='\0';
+      ndx=0;
+      return String(receivedCharacters);
     }
-
-    else if(readCharacter==startMarker){
-      reading=true;
+    else if(readCharacter!='\r'){
+      receivedCharacters[ndx++]=readCharacter;
+      if(ndx>=numChars){
+        ndx=numChars-1;
+      }
     }
   }
 
-  if(newData){
-    return receivedCharacters;
-  } else {
-    return "";
-  }
+  return "";
 }
 
 float readFloatFromSerial(){
-  String serialInput = readSerialWithStartEndMarkers();
+  String serialInput = readSerialUntilNewline();
   if(serialInput!=""){
     return (serialInput.toFloat());
   } else {
