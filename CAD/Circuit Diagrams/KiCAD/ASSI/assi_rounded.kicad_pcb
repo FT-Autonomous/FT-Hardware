@@ -39,7 +39,7 @@
 
   (setup
     (pad_to_mask_clearance 0)
-    (grid_origin 168.23 131.04)
+    (grid_origin 168.23 125.96)
     (pcbplotparams
       (layerselection 0x00010fc_ffffffff)
       (disableapertmacros false)
@@ -3090,6 +3090,7 @@
     )
   )
 
+  (gr_rect (start 160.61 141.2) (end 170.77 125.96) (layer "F.Cu") (width 0.2) (fill solid) (tstamp 9e5b0177-ea58-4f76-8b57-ff1c6e52d9df))
   (gr_arc (start 196.17 70.08) (mid 194.373949 69.336051) (end 193.63 67.54) (layer "Edge.Cuts") (width 0.1) (tstamp 617527c2-4fe3-4dff-85c0-d07a89eb4c1f))
   (gr_line (start 193.63 67.54) (end 160.61 67.54) (layer "Edge.Cuts") (width 0.1) (tstamp 75c82ee7-0646-43b7-90c2-366e9307e8f2))
   (gr_arc (start 193.63 143.74) (mid 194.373949 141.943949) (end 196.17 141.2) (layer "Edge.Cuts") (width 0.1) (tstamp 925b0ad6-5413-4b16-a720-28e9e56ec287))
