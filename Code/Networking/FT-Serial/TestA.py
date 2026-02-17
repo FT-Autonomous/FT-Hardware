@@ -12,7 +12,7 @@ else:
  print("Try again") 
  exit()
 
-ser.write(b'<Sup Bruz>\n')
+ser.write(b'Sup Bruz\n')
 print("Message sent.")  
 ser.close()
 

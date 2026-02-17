@@ -64,8 +64,33 @@ String readSerialWithStartEndMarkers(){
   }
 }
 
+String readSerialUntilNewline(){ // type your value and press enter
+  static byte ndx=0;
+  char readCharacter;
+  const byte numChars=32;
+  static char receivedCharacters[numChars];
+
+  while(Serial.available()>0){
+    readCharacter=Serial.read();
+
+    if(readCharacter=='\n'){
+      receivedCharacters[ndx]='\0';
+      ndx=0;
+      return String(receivedCharacters);
+    }
+    else if(readCharacter!='\r'){
+      receivedCharacters[ndx++]=readCharacter;
+      if(ndx>=numChars){
+        ndx=numChars-1;
+      }
+    }
+  }
+
+  return "";
+}
+
 void printSerial(){
-  String serialString = readSerialWithStartEndMarkers();
+  String serialString = readSerialUntilNewline();
   if(serialString!=""){
     Serial.print("received: ");
     Serial.println(serialString);
