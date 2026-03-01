@@ -1,3 +1,7 @@
+#include <FTSerial.h>
+
+FTSerial ftSerial(Serial, 24);
+
 //Hard limits (to not break mechanically, only change if range is tested/safe)
 const float ANGLE_LIMIT_DEG = 80.0;
 const float STOP_BAND_DEG = 1.0; //How close is it to required angle before stopping (tolerance)
@@ -6,7 +10,7 @@ const float STOP_BAND_DEG = 1.0; //How close is it to required angle before stop
 const int POT_ADC_LEFT = 150; //CHANGE THIS, TEST IT BEFORE RUNNING CODE, PUT AT LEFT EXTREME AND PUT THAT ANGLE FROM POTENTIOMETER IN HERE/////////////////////
 const int POT_ADC_RIGHT = 870; //CHANGE THIS, TEST IT BEFORE RUNNING CODE, PUT AT RIGHT EXTREME AND PUT THAT ANGLE FROM POTENTIOMETER IN HERE/////////////////////
 
-const float GAIN = 3.0; //proportional gain for how far out from PWM value (error)
+const float GAIN = 10.0; //proportional gain for how far out from PWM value (error) -- increased as seems to work better in sim higher
 const int PWM_MIN = 35;
 const int PWM_MAX = 200;
 
@@ -17,7 +21,7 @@ const bool HOLD_LAST_VALUE = true;
 const unsigned long SERIAL_TIMEOUT_MS = 1500;
 
 //Pins
-//idk what pins we're using, someone will have to change this /////////////////////////////////////////////////////////////////
+//these pins should be right. if the steering is turning the wrong way flip the wires or change the pwm pins here ///////////////////////////
 const int POT_PIN = A3;
 
 const int RPWM_PIN = 5;
@@ -34,6 +38,7 @@ unsigned long lastCmdMs = 0;
 
 void setup() {
   Serial.begin(115200); //maybe we can make this lower, Ahmed had 9500 but I wasn't sure if that was arbitrary
+                        // re above: higher baudrate = faster time to react to commands, i don't see a problem with this
 
  pinMode(RPWM_PIN, OUTPUT); //in testing we generally just kept these hooked up to 5V
  pinMode(LPWM_PIN, OUTPUT); //keeping as may be useful for emergency stop in future
@@ -56,7 +61,7 @@ void setup() {
 void loop() {
   //Update target from serial
   float cmd;
-  if (readTargetFromSerial(cmd)) {
+  if (ftSerial.readFloat(cmd)) {
     targetDeg = directionCheck(cmd, -ANGLE_LIMIT_DEG, +ANGLE_LIMIT_DEG);
     lastCmdMs = millis();
 
@@ -155,32 +160,3 @@ void drive (int pwmSigned) {
   }
 }
 
-bool readTargetFromSerial (float &outDeg) { // TODO: make a serial library so we stop reinventing the wheel
-                                            //       (we use serial stuff similar to this in a number of different files)
-  static char buf[24]; //allows up to 24 signifigant figure input (higher than we can reasonably get with potentiometer)
-  static uint8_t idx = 0;
-
-  while (Serial.available() > 0) {
-    char c = Serial.read();
-    if (c == '\r') continue;
-
-    if (c == '\n') {
-      buf[idx] = '\0';
-      idx = 0;
-
-      //empty line
-      if (buf[0] == '\0') return false;
-
-      outDeg = atof(buf);
-      return true;
-    }
-
-    if (idx < sizeof(buf) - 1) {
-      buf[idx++] = c;
-    } else {
-      //reset if overflown
-      idx = 0;
-    }
-  }
-  return false;
-}
