@@ -10,7 +10,7 @@ const float STOP_BAND_DEG = 1.0; //How close is it to required angle before stop
 const int POT_ADC_LEFT = 150; //CHANGE THIS, TEST IT BEFORE RUNNING CODE, PUT AT LEFT EXTREME AND PUT THAT ANGLE FROM POTENTIOMETER IN HERE/////////////////////
 const int POT_ADC_RIGHT = 870; //CHANGE THIS, TEST IT BEFORE RUNNING CODE, PUT AT RIGHT EXTREME AND PUT THAT ANGLE FROM POTENTIOMETER IN HERE/////////////////////
 
-const float GAIN = 10.0; //proportional gain for how far out from PWM value (error) -- increased as seems to work better in sim higher
+const float GAIN = 3.0; //proportional gain for how far out from PWM value (error)
 const int PWM_MIN = 35;
 const int PWM_MAX = 200;
 
