@@ -1,3 +1,7 @@
+#include <FTSerial.h>
+
+FTSerial ftSerial(Serial, 24);
+
 //Hard limits (to not break mechanically, only change if range is tested/safe)
 const float ANGLE_LIMIT_DEG = 80.0;
 const float STOP_BAND_DEG = 1.0; //How close is it to required angle before stopping (tolerance)
@@ -10,15 +14,15 @@ const float GAIN = 3.0; //proportional gain for how far out from PWM value (erro
 const int PWM_MIN = 35;
 const int PWM_MAX = 200;
 
-const float ANGLE_SMOOTHING = 0.20; //change between 0 and 1, 0 being no smoothing as heading towards angle.
+const float ANGLE_SMOOTHING = 0.20; //change between 0.000...1 and 1, 1 being no smoothing as heading towards angle. (it will not move if 0)
 
 //Limits in testing
 const bool HOLD_LAST_VALUE = true;
 const unsigned long SERIAL_TIMEOUT_MS = 1500;
 
 //Pins
-//idk what pins we're using, someone will have to change this /////////////////////////////////////////////////////////////////
-const int POT_PIN = A0;
+//these pins should be right. if the steering is turning the wrong way flip the wires or change the pwm pins here ///////////////////////////
+const int POT_PIN = A3;
 
 const int RPWM_PIN = 5;
 const int LPWM_PIN = 6;
@@ -34,9 +38,10 @@ unsigned long lastCmdMs = 0;
 
 void setup() {
   Serial.begin(115200); //maybe we can make this lower, Ahmed had 9500 but I wasn't sure if that was arbitrary
+                        // re above: higher baudrate = faster time to react to commands, i don't see a problem with this
 
- pinMode(RPWM_PIN, OUTPUT);
- pinMode(LPWM_PIN, OUTPUT);
+ pinMode(RPWM_PIN, OUTPUT); //in testing we generally just kept these hooked up to 5V
+ pinMode(LPWM_PIN, OUTPUT); //keeping as may be useful for emergency stop in future
  pinMode(REN_PIN, OUTPUT);
  pinMode(LEN_PIN, OUTPUT);
 
@@ -56,7 +61,7 @@ void setup() {
 void loop() {
   //Update target from serial
   float cmd;
-  if (readTargetFromSerial(cmd)) {
+  if (ftSerial.readFloat(cmd)) {
     targetDeg = directionCheck(cmd, -ANGLE_LIMIT_DEG, +ANGLE_LIMIT_DEG);
     lastCmdMs = millis();
 
@@ -81,7 +86,6 @@ void loop() {
 
   //control
   if (abs(err) <= STOP_BAND_DEG) {
-    driverEnable(true);
     coastStop();
   } else {
     //proportional speed
@@ -145,8 +149,6 @@ void drive (int pwmSigned) {
   int pwm = abs(pwmSigned);
   pwm = constrain(pwm, 0, 255);
 
-  driverEnable(true);
-
   if (pwmSigned > 0) {
     analogWrite(RPWM_PIN, pwm);
     analogWrite(LPWM_PIN, 0);
@@ -158,31 +160,3 @@ void drive (int pwmSigned) {
   }
 }
 
-bool readTargetFromSerial (float &outDeg) {
-  static char buf[24]; //allows up to 24 signifigant figure input (higher than we can reasonably get with potentiometer)
-  static uint8_t idx = 0;
-
-  while (Serial.available() > 0) {
-    char c = Serial.read();
-    if (c == '\r') continue;
-
-    if (c == '\n') {
-      buf[idx] = '\0';
-      idx = 0;
-
-      //empty line
-      if (buf[0] == '\0') return false;
-
-      outDeg = atof(buf);
-      return true;
-    }
-
-    if (idx < sizeof(buf) - 1) {
-      buf[idx++] = c;
-    } else {
-      //reset if overflown
-      idx = 0;
-    }
-  }
-  return false;
-}

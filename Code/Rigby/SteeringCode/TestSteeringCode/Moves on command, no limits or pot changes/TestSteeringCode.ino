@@ -1,15 +1,12 @@
-char received = 's';
+#include <FTSerial.h>
+
+FTSerial ftSerial(Serial);
 
 int motorL = 5;
 int motorR = 6;
 
 int high = 255;
 int low = 0;
-/*
-//timing control to avoid flooding arduino
-unsigned long msSinceCmd = 0;
-unsigned long msTimeout = 200;
-*/
 
 void setup() {
   Serial.begin(9600); //we could speed up if lagging? - 115200
@@ -17,37 +14,18 @@ void setup() {
   pinMode(motorR, OUTPUT);
 
   steer('s');  //stopped by default
-  //msSinceCmd = millis();
 }
 
 void loop() {
-  if (checkSerial()) {
-    steer(received);
-  }
-}
-
-
-bool checkSerial() {
-  bool got = false;
-
-  while(Serial.available() > 0) {
-    char c = Serial.read();
-
-    if (c == '\n' || c == '\r' || c == ' ') continue;
-
-    received = c;
-    //msSinceCmd = millis();
-    got = true;
-  }
-
-  if (got) {
+  String line = ftSerial.readUntilNewline();
+  if (line.length() > 0) {
+    char received = line.charAt(0);
     Serial.print("Got: ");
     Serial.print(received);
     Serial.print(" ASCII=");
     Serial.println((int)received);
+    steer(received);
   }
-
-  return got;
 }
 
 
