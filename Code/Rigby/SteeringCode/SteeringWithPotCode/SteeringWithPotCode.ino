@@ -8,7 +8,7 @@ const float STOP_BAND_DEG = 1.0; //How close is it to required angle before stop
 
   //make sure adc left and right are never the same, make left < right at all times (avoids dividing by 0 later) - should be solved when actual values are added anyways
 const int POT_ADC_LEFT = 150; //CHANGE THIS, TEST IT BEFORE RUNNING CODE, PUT AT LEFT EXTREME AND PUT THAT ANGLE FROM POTENTIOMETER IN HERE/////////////////////
-const int POT_ADC_RIGHT = 870; //CHANGE THIS, TEST IT BEFORE RUNNING CODE, PUT AT RIGHT EXTREME AND PUT THAT ANGLE FROM POTENTIOMETER IN HERE/////////////////////
+const int POT_ADC_RIGHT = 870; //CHAN30GE THIS, TEST IT BEFORE RUNNING CODE, PUT AT RIGHT EXTREME AND PUT THAT ANGLE FROM POTENTIOMETER IN HERE/////////////////////
 
 const float GAIN = 3.0; //proportional gain for how far out from PWM value (error)
 const int PWM_MIN = 35;
