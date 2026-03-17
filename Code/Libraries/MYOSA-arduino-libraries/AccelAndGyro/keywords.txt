@@ -1,0 +1,90 @@
+#######################################
+# Syntax Coloring Map for AccelAndGyro
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+AccelAndGyro					KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+begin						KEYWORD2
+ping						KEYWORD2
+getDeviceId					KEYWORD2
+reset						KEYWORD2
+resetGyroPath				KEYWORD2
+resetAccelPath				KEYWORD2
+resetTempPath				KEYWORD2
+setFullScaleGyroRang		KEYWORD2
+getFullScaleGyroRange		KEYWORD2
+setFullScaleAccelRange		KEYWORD2
+getFullScaleAccelRange		KEYWORD2
+setSleep					KEYWORD2
+getSleepSts					KEYWORD2
+setCycleMode				KEYWORD2
+getCycleMode				KEYWORD2
+setTempSensorDisable		KEYWORD2
+getTempSensorDisableSts		KEYWORD2
+setClkSource				KEYWORD2
+getClkSource				KEYWORD2
+setWakeFrequency			KEYWORD2
+getWakeFrequency			KEYWORD2
+setStandbyXAccel			KEYWORD2
+getStandbyXAccelSts			KEYWORD2
+setStandbyYAccel			KEYWORD2
+getStandbyYAccelSts			KEYWORD2
+setStandbyZAccel			KEYWORD2
+getStandbyZAccelSts			KEYWORD2
+setStandbyXGyro				KEYWORD2
+getStandbyXGyroSts			KEYWORD2
+setStandbyYGyro				KEYWORD2
+getStandbyYGyroSts			KEYWORD2
+setStandbyZGyro				KEYWORD2
+getStandbyZGyroSts			KEYWORD2
+getAccelX					KEYWORD2
+getAccelY					KEYWORD2
+getAccelZ					KEYWORD2
+getGyroX					KEYWORD2
+getGyroY					KEYWORD2
+getGyroZ					KEYWORD2
+getTempC					KEYWORD2
+getTempF					KEYWORD2
+getTiltX					KEYWORD2
+getTiltY					KEYWORD2
+getTiltZ					KEYWORD2
+getMotionStatus				KEYWORD2
+getMotionDetectionThreshold KEYWORD2
+setMotionDetectionThreshold KEYWORD2
+getMotionDetectionDuration 	KEYWORD2
+setMotionDetectionDuration	KEYWORD2
+getZeroMotionDetectionThreshold KEYWORD2
+setZeroMotionDetectionThreshold KEYWORD2
+getZeroMotionDetectionDuration 	KEYWORD2
+setZeroMotionDetectionDuration	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+MPU6050_ADDRESS_AD0_LOW		LITERAL1
+MPU6050_ADDRESS_AD0_HIGH	LITERAL1
+MPU_GYRO_CONFIG_FS_SEL_250	LITERAL1
+MPU_GYRO_CONFIG_FS_SEL_500	LITERAL1
+MPU_GYRO_CONFIG_FS_SEL_1000	LITERAL1
+MPU_GYRO_CONFIG_FS_SEL_2000	LITERAL1
+MPU_ACCEL_CONFIG_FS_SEL_2g	LITERAL1
+MPU_ACCEL_CONFIG_FS_SEL_4g	LITERAL1
+MPU_ACCEL_CONFIG_FS_SEL_8g	LITERAL1
+MPU_ACCEL_CONFIG_FS_SEL_16g	LITERAL1
+MPU6050_CLOCK_INTERNAL		LITERAL1
+MPU6050_CLOCK_PLL_XGYRO		LITERAL1
+MPU6050_CLOCK_PLL_YGYRO		LITERAL1
+MPU6050_CLOCK_PLL_ZGYRO		LITERAL1
+MPU6050_CLOCK_PLL_EXT32K	LITERAL1
+MPU6050_CLOCK_PLL_EXT19M	LITERAL1
+MPU6050_CLOCK_KEEP_RESET	LITERAL1
+MPU_PWR_MGMT_2_LP_WAKE_1P25Hz	LITERAL1
+MPU_PWR_MGMT_2_LP_WAKE_5Hz		LITERAL1
+MPU_PWR_MGMT_2_LP_WAKE_20Hz		LITERAL1
+MPU_PWR_MGMT_2_LP_WAKE_40Hz		LITERAL1

@@ -1,0 +1,38 @@
+############################################
+# Syntax Coloring Map for BarometricPressure
+############################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+BarometricPressure	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+begin				KEYWORD2
+getPressure			KEYWORD2
+getPressurePascal	KEYWORD2
+getPressureHg		KEYWORD2
+getPressureBar		KEYWORD2
+getTempC			KEYWORD2
+getTempF			KEYWORD2
+reset				KEYWORD2
+ping				KEYWORD2
+getDeviceId			KEYWORD2
+getSeaLevelPressure	KEYWORD2
+getAltitude			KEYWORD2
+setAccuracyMode		KEYWORD2
+
+#######################################
+# Library (KEYWORD3)
+#######################################
+
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+ULTRA_LOW_POWER			LITERAL1
+STANDARD				LITERAL1
+HIGH_RESOLUTION			LITERAL1
+ULTRA_HIGH_RESOLUTION	LITERAL1
