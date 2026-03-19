@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MYOSA Vibration Logger (BLE)</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #121a33;
+      --text: #e8ecff;
+      --muted: #aab4e6;
+      --ok: #3ddc97;
+      --warn: #ffcc66;
+      --bad: #ff6b6b;
+      --line: rgba(232,236,255,0.12);
+    }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      background: radial-gradient(1200px 800px at 20% 10%, #17204a 0%, var(--bg) 55%);
+      color: var(--text);
+    }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 18px; }
+    h1 { font-size: 20px; margin: 0 0 12px; }
+    .grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 14px;
+    }
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+    .card {
+      background: rgba(18,26,51,0.85);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+    }
+    .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    button {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: #1a2450;
+      color: var(--text);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button:hover { filter: brightness(1.1); }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .statusDot {
+      width: 10px; height: 10px; border-radius: 50%; background: #666;
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.06);
+    }
+    .status { display:flex; align-items:center; gap: 8px; color: var(--muted); font-size: 14px; }
+
+    .big {
+      font-size: 38px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin: 8px 0 0;
+    }
+    .sub { color: var(--muted); font-size: 13px; margin-top: 4px; }
+
+    .meter {
+      margin-top: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      overflow: hidden;
+      border: 1px solid var(--line);
+    }
+    .meter > div {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--ok), var(--warn), var(--bad));
+      transition: width 120ms linear;
+    }
+
+    canvas { width: 100%; height: 220px; background: rgba(0,0,0,0.12); border-radius: 10px; border: 1px solid var(--line); }
+
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 8px 6px; border-bottom: 1px solid var(--line); text-align: left; font-size: 13px; }
+    th { color: var(--muted); font-weight: 700; }
+
+    code { color: #d7e0ff; }
+    .hint { color: var(--muted); font-size: 13px; line-height: 1.4; }
+    .pill { display:inline-block; padding: 3px 8px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>MYOSA Vibration Logger (ESP32 · Web Bluetooth)</h1>
+
+    <div class="card" style="margin-bottom: 14px;">
+      <div class="row" style="justify-content: space-between;">
+        <div class="row">
+          <button id="btnConnect">Connect via Bluetooth</button>
+          <button id="btnDisconnect" disabled>Disconnect</button>
+          <button id="btnDownloadSamples" disabled>Download samples CSV</button>
+          <button id="btnDownloadEvents" disabled>Download shake events CSV</button>
+        </div>
+        <div class="status">
+          <span class="statusDot" id="statusDot"></span>
+          <span id="statusText">Not connected</span>
+          <span class="pill" id="browserHint"></span>
+        </div>
+      </div>
+      <p class="hint" style="margin: 10px 0 0;">
+        Tip: This page must be opened from <code>http://localhost</code> (or HTTPS) for Web Bluetooth to work.
+        Use Chrome or Edge on desktop.
+      </p>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <div class="row" style="justify-content: space-between;">
+          <div>
+            <div class="sub">Current vibration (Shake score 0–1000)</div>
+            <div class="big" id="vibeText">—</div>
+            <div class="sub" id="vibeSub">Waiting for data…</div>
+          </div>
+          <div style="text-align: right;">
+            <div class="sub">Temperature</div>
+            <div class="big" id="tempText">—</div>
+            <div class="sub" id="timeText">—</div>
+          </div>
+        </div>
+        <div class="meter"><div id="meterFill"></div></div>
+        <div class="sub" style="margin-top: 10px;">
+          <span id="levelBadge" class="pill">Level —</span>
+          <span class="pill" id="peakBadge">Peak —</span>
+          <span class="pill" id="rateBadge">0.5s updates</span>
+        </div>
+
+        <div style="margin-top: 14px;">
+          <div class="sub" style="margin-bottom: 8px;">Last ~2 minutes (RMS g)</div>
+          <canvas id="chart" width="1000" height="260"></canvas>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="row" style="justify-content: space-between; margin-bottom: 8px;">
+          <div class="sub">Shake events (grouped)</div>
+          <div class="pill" id="eventCount">0 events</div>
+        </div>
+        <div style="overflow:auto; max-height: 520px;">
+          <table>
+            <thead>
+              <tr>
+                <th>Start</th>
+                <th>End</th>
+                <th>Duration</th>
+                <th>Max level</th>
+                <th>Max score</th>
+                <th>Max peak (g)</th>
+                <th>Avg RMS (g)</th>
+              </tr>
+            </thead>
+            <tbody id="eventsBody">
+              <tr><td colspan="7" class="hint">No shake events yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="hint" style="margin-top: 10px;">
+          Events are created when the level is <b>Caution</b> or higher for one or more 0.5s windows.
+        </p>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top: 14px;">
+      <div class="sub" style="margin-bottom: 8px;">Raw samples (latest)</div>
+      <div style="overflow:auto; max-height: 260px;">
+        <table>
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Score</th>
+              <th>RMS (g)</th>
+              <th>Peak (g)</th>
+              <th>Temp (°C)</th>
+              <th>Level</th>
+            </tr>
+          </thead>
+          <tbody id="samplesBody">
+            <tr><td colspan="6" class="hint">No data yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

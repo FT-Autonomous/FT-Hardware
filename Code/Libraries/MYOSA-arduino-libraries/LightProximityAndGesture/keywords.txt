@@ -1,0 +1,71 @@
+#######################################
+# Syntax Coloring Map for APDS9960
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+APDS9960					KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+begin						KEYWORD2
+getDeviceId					KEYWORD2
+ping						KEYWORD2
+getMode						KEYWORD2
+setMode						KEYWORD2
+enablePower					KEYWORD2
+disablePower				KEYWORD2
+enableAmbientLightSensor	KEYWORD2
+disableAmbientLightSensor	KEYWORD2
+enableProximitySensor		KEYWORD2
+disableProximitySensor		KEYWORD2
+enableGestureSensor			KEYWORD2
+disableGestureSensor		KEYWORD2
+setAmbientLightInt			KEYWORD2
+getAmbientLightIntState		KEYWORD2
+setProximityInt				KEYWORD2
+getProximityIntState		KEYWORD2
+setGestureInt				KEYWORD2
+getGestureIntState			KEYWORD2
+getAmbientLightGain			KEYWORD2
+setAmbientLightGain			KEYWORD2
+getProximityGain			KEYWORD2
+setProximityGain			KEYWORD2
+getGestureGain				KEYWORD2
+setGestureGain				KEYWORD2
+getLightIntLowThreshold		KEYWORD2
+setLightIntLowThreshold		KEYWORD2
+getLightIntHighThreshold	KEYWORD2
+setLightIntHighThreshold	KEYWORD2
+getProximityIntLowThreshold	KEYWORD2
+setProximityIntLowThreshold	KEYWORD2
+getProximityIntHighThreshold	KEYWORD2
+setProximityIntHighThreshold	KEYWORD2
+getLedDrive						KEYWORD2
+setLedDrive						KEYWORD2
+getGestureLedDrive				KEYWORD2
+setGestureLedDrive				KEYWORD2
+clearAmbientLightInt			KEYWORD2
+clearProximityInt				KEYWORD2
+getAmbientLight					KEYWORD2
+getRGBProportion				KEYWORD2
+getRedProportion				KEYWORD2
+getGreenProportion				KEYWORD2
+getBlueProportion				KEYWORD2
+getProximity					KEYWORD2
+getGesture						KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+POWER						LITERAL1
+AMBIENT_LIGHT				LITERAL1
+PROXIMITY					LITERAL1
+WAIT						LITERAL1
+AMBIENT_LIGHT_INT			LITERAL1
+PROXIMITY_INT				LITERAL1
+GESTURE						LITERAL1
+DISABLE						LITERAL1
+ENABLE						LITERAL1

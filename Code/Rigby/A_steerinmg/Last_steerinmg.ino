@@ -1,4 +1,4 @@
-//Latest code as of 27/02/2026 (Hi Conor)
+//Latest code as of 16/04/2026 (Passed all tests so this is the main code)
 // The CODE WORKS despite the alligations that it does not, tested it again using a diffrent pot
 // The issue? the wires to the pot are not secured, values get stuck to a fixed value (0 in this case)
 
@@ -18,7 +18,7 @@ int MOTOR_F = 6;
 
 void setup() {
 
- Serial.begin(9600);
+ Serial.begin(115200);
  Serial.setTimeout(1000); 
  pinMode(pot, INPUT);
  pinMode(MOTOR_F,OUTPUT);
@@ -36,8 +36,13 @@ float angle_current = 0.0; // Float works for now, round off happens down in lin
 float angle_current_raw = 0.0;
 float error = 0;
 
-float kp = 1.2;
-float angle_max = 30; 
+float pot_min = 447;
+float pot_max = 591; // so these here are the angle values (roughly), for max L, C, max R
+float center = 520;
+
+
+float kp = 10;
+float angle_max = 17.5; 
 
 unsigned long lastTime = 0;
 unsigned long sample = 10;   // smol boy when running (10–20 ms) and big when debug
@@ -56,7 +61,9 @@ void loop() {
   {
     lastTime = currentTime; // update 
     int pot_ang = analogRead(pot); // Update, use int insted 
-    angle_current = map(pot_ang, 0 , 1023, -angle_max, angle_max); // TL;DR match the limits to the pot
+    pot_ang = constrain(pot_ang, pot_min, pot_max); // map the range again just to stay in range
+    //angle_current = map(pot_ang, 0 , 1023, -angle_max, angle_max); // TL;DR match the limits to the pot
+    angle_current = (float)(pot_ang - pot_min) * (angle_max - (-angle_max)) / (pot_max - pot_min) + (-angle_max); // you convert the pot reading in deg and then
 
     //angle_current = round(angle_current_raw * 10) / 10;
     error = angle_target - angle_current; // the diffrence is how we compute the PID
@@ -66,7 +73,7 @@ void loop() {
 
     
     // Control the motor direction using simple if
-    float range = 1;
+    float range = 0.4;
     if (error >= range) //if error is greater than 1
     {
       analogWrite(MOTOR_F, 0);    
@@ -78,6 +85,12 @@ void loop() {
       analogWrite(MOTOR_F, pwm);    
       analogWrite(MOTOR_B, 0);  // Go left (or right can't rememeber)
       Serial.print("R");
+    }
+    else if (error = 's')
+    {
+     analogWrite(MOTOR_F, 0);    
+     analogWrite(MOTOR_B, 0);  // think of it as an E-break
+     Serial.print("E stop");
     }
    else //if error is less than 1 and less than -1 
    {
