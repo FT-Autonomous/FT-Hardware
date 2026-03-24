@@ -8,8 +8,12 @@
 //   https://arduino.github.io/arduino-cli/0.32/getting-started/
 //   https://forum.arduino.cc/t/serial-input-basics-updated/382007
 
+#include "FTSerial.h"
+
 #define BAUD_RATE 115200
 #define MAX_MSG_LEN 64  // ESP32 has plenty of RAM — doubled from original 32
+
+FTSerial ftSerial(Serial, MAX_MSG_LEN);
 
 void setup() {
   Serial.begin(BAUD_RATE);
@@ -24,69 +28,8 @@ void loop() {
   yield(); // feed the ESP32 watchdog
 }
 
-// Reads messages wrapped in < > markers, e.g. <hello world>
-String readSerialWithStartEndMarkers() {
-  static boolean reading = false;
-  static byte ndx = 0;
-  char startMarker = '<';
-  char endMarker = '>';
-  char readCharacter;
-
-  static char receivedCharacters[MAX_MSG_LEN];
-  boolean newData = false;
-
-  while (Serial.available() > 0 && !newData) {
-    readCharacter = Serial.read();
-
-    if (reading) {
-      if (readCharacter != endMarker) {
-        receivedCharacters[ndx++] = readCharacter;
-        if (ndx >= MAX_MSG_LEN) {
-          ndx = MAX_MSG_LEN - 1;
-        }
-      } else {
-        receivedCharacters[ndx] = '\0';
-        reading = false;
-        ndx = 0;
-        newData = true;
-      }
-    } else if (readCharacter == startMarker) {
-      reading = true;
-    }
-  }
-
-  if (newData) {
-    return String(receivedCharacters);
-  }
-  return "";
-}
-
-// Reads until newline — type your message and press enter
-String readSerialUntilNewline() {
-  static byte ndx = 0;
-  char readCharacter;
-  static char receivedCharacters[MAX_MSG_LEN];
-
-  while (Serial.available() > 0) {
-    readCharacter = Serial.read();
-
-    if (readCharacter == '\n') {
-      receivedCharacters[ndx] = '\0';
-      ndx = 0;
-      return String(receivedCharacters);
-    } else if (readCharacter != '\r') {
-      receivedCharacters[ndx++] = readCharacter;
-      if (ndx >= MAX_MSG_LEN) {
-        ndx = MAX_MSG_LEN - 1;
-      }
-    }
-  }
-
-  return "";
-}
-
 void printSerial() {
-  String serialString = readSerialUntilNewline();
+  String serialString = ftSerial.readUntilNewline();
   if (serialString != "") {
     Serial.print("received: ");
     Serial.println(serialString);
