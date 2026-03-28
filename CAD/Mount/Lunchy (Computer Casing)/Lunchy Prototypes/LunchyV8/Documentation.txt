@@ -1,0 +1,7 @@
+This version is being designed with the intent of being the final version for the AI car.  
+It has become clear a new Lunchy will be needed for the ADS car.  
+
+Main design changes:
+- The back part of Lunchy for cabling is now separate so it can be slid on/off easily depending on weather.  
+- The entire design has been enlarged to allow it to grow from an internal volume of 150x150x150 mm (+30mm slope) to 180x180x150 mm (+30mm slope)  
+- There are now bolts inserted in the mount holes, and new mount holes have been added for Brainy (compatible model BrainyV3).  
