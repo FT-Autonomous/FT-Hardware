@@ -1,10 +1,13 @@
-const int LPWM = 9; 
+#include "FTSerial.h"
+
+const int LPWM = 9;
 const int RPWM = 10;
 const int L_EN = 25;
 const int R_EN = 26;
 const int LED = 27;
 
 bool isArmed = false;
+FTSerial ftSerial(Serial);
 
 void setup() {
   Serial.begin(115200);
@@ -15,7 +18,7 @@ void setup() {
   pinMode(L_EN, OUTPUT);
   pinMode(R_EN, OUTPUT);
   pinMode(LED, OUTPUT);
-  
+
   digitalWrite(LPWM, LOW);
   digitalWrite(RPWM, LOW);
   digitalWrite(L_EN, LOW); // Keep driver disabled initially
@@ -26,15 +29,11 @@ void setup() {
 
   // 2. Wait for Serial Command
   while (!isArmed) {
-    if (Serial.available() > 0) {
-      String input = Serial.readStringUntil('\n');
-      input.trim();
-      if (input == "ARM") {
-        isArmed = true;
-        Serial.println("!!! SYSTEM ARMED - MOTORS LIVE !!!");
-      }
+    String input = ftSerial.readUntilNewline();
+    if (input == "ARM") {
+      isArmed = true;
+      Serial.println("!!! SYSTEM ARMED - MOTORS LIVE !!!");
     }
-    delay(100); 
   }
 
   // 3. Enable the driver only after arming
