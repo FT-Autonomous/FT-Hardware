@@ -8,16 +8,20 @@
 //   https://arduino.github.io/arduino-cli/0.32/getting-started/
 //   https://forum.arduino.cc/t/serial-input-basics-updated/382007
 
+#include <WiFi.h>
 #include "FTSerial.h"
 
 #define BAUD_RATE 115200
 #define MAX_MSG_LEN 64  // ESP32 has plenty of RAM — doubled from original 32
 
 FTSerial ftSerial(Serial, MAX_MSG_LEN);
+String myId;  // "ID:AA:BB:CC:DD:EE:FF" — stable per board, read from WiFi MAC
 
 void setup() {
   Serial.begin(BAUD_RATE);
   delay(1000); // let ESP32 boot messages flush before we print
+  myId = "ID:" + WiFi.macAddress();
+  Serial.println(myId);  // boot banner — host may or may not be listening yet
   Serial.println("FireBeetle serial test active");
 }
 
@@ -30,8 +34,11 @@ void loop() {
 
 void printSerial() {
   String serialString = ftSerial.readUntilNewline();
-  if (serialString != "") {
-    Serial.print("received: ");
-    Serial.println(serialString);
+  if (serialString == "") return;
+  if (serialString == "WHOAMI") {
+    Serial.println(myId);  // host asks any time; answer immediately
+    return;
   }
+  Serial.print("received: ");
+  Serial.println(serialString);
 }
