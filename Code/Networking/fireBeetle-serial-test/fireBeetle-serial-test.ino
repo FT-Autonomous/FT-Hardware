@@ -19,6 +19,7 @@ String myId;  // "ID:AA:BB:CC:DD:EE:FF" — stable per board, read from WiFi MAC
 
 void setup() {
   Serial.begin(BAUD_RATE);
+  WiFi.mode(WIFI_STA);
   delay(1000); // let ESP32 boot messages flush before we print
   myId = "ID:" + WiFi.macAddress();
   Serial.println(myId);  // boot banner — host may or may not be listening yet
