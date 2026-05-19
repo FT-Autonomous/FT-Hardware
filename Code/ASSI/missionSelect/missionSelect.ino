@@ -14,6 +14,7 @@ int mode = ledPinMin;  //test
 int prevMode = mode;
 
 const int cyclePin = 2;
+
 const int selectPin = 3;
 
 bool selected = false;
@@ -46,14 +47,14 @@ void cycleButton() {
 }  // code that cycles mode when appropriate button pressed
 
 void selectButton() {
-  selected = true;
+  //selected = true;
 }
 
 void loop() {
 
   if (!selected) {  // if no mode has been selected yet
     blink(mode);    //blink the LED corresponding to the current mode being conidered
-    //Serial.println(mode);
+    Serial.println(mode);
   } else {
     digitalWrite(mode, HIGH);  //display chosen mode
   }
