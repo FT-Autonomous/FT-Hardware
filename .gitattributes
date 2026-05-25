@@ -2,3 +2,5 @@
 *.slprt filter=lfs diff=lfs merge=lfs -text
 *.step filter=lfs diff=lfs merge=lfs -text
 *.SLDASM filter=lfs diff=lfs merge=lfs -text
+*.SLDRW filter=lfs diff=lfs merge=lfs -text
+*.SLDDRW filter=lfs diff=lfs merge=lfs -text
