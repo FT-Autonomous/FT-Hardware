@@ -1,0 +1,3 @@
+FT-Hardware/CAD/Mount/Switchy Jr/PrintParts/Switchy)JR&SR_Print_File.3mf
+
+It is a Bambu Studio 3mf with all parts in their colours etc set up for printing.
