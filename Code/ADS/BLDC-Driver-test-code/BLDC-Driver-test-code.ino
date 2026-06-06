@@ -13,9 +13,9 @@ int tolerance = 5;
 // ===== RPM VARIABLES =====
 
 const int polePairs = 2;
-
+const int MAXRPM = 3500;
 // Driver outputs 3 * polePairs pulses per revolution
-const int pulsesPerRev = 3 * polePairs; // = 6 pulses/rev
+const int pulsesPerRev = 3 * polePairs;  // = 6 pulses/rev
 
 volatile unsigned long pulseCount = 0;
 
@@ -23,6 +23,9 @@ float currentRPM = 0;
 
 unsigned long prevRPMTime = 0;
 const int rpmUpdateTime = 100;  // ms
+
+
+int targetRPM = 0;
 
 void setup() {
   pinMode(pwmPin, OUTPUT);
@@ -32,7 +35,7 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(motorOutput), countPulse, RISING);
 
   Serial.begin(9600);
-  Serial.println("Enter PWM value (0-255):");
+  Serial.println("Enter targetRPM value (0-3500):");
 
   prevRPMTime = millis();
 }
@@ -41,17 +44,20 @@ void loop() {
   if (Serial.read() == 'c') {
 
     // Read integer from Serial Monitor
-    pwmValue = Serial.parseInt();
-    pwmValue = constrain(pwmValue, 0, 255);
-    // Constrain value to valid PWM range
-    //pwmValue = constrain(pwmValue, 0, 255);
+    targetRPM = Serial.parseInt();
+    targetRPM = constrain(targetRPM, 0, MAXRPM);
 
     // Print confirmation
-    Serial.print("PWM set to: ");
-    Serial.println(pwmValue);
+    Serial.print("RPM target set to: ");
+    Serial.println(targetRPM);
   }
 
-  updateRPM();
+  int dumb = 1;
+  if (millis() > 2000*dumb) {
+    PID();
+    dumb++;
+  }
+
 
   // Output PWM signal
   analogWrite(pwmPin, pwmValue);
@@ -74,7 +80,7 @@ void updateRPM() {
 
     if (abs(currentRPM - prevVal) > tolerance) {
 
-      Serial.print("RPM = ");
+      Serial.print("---------------RPM = ");
       Serial.println(currentRPM);
 
       prevVal = currentRPM;
