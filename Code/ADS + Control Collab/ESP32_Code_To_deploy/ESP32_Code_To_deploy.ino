@@ -12,7 +12,7 @@ int margin = 2;  // TODO calibrate tolerance
 
 void setup() {
   Serial.begin(9600);
-  Serial.println("----------------------");
+  //Serial.println("----------------------");
 
 
   pinMode(pinA, OUTPUT);  //2 analog output pins
@@ -50,7 +50,7 @@ int updateTarget() {
       targetMM = constrain(newTarget, 0, (int)sliderTravelMM);
     }
 
-    Serial.print("MM target set to: ");
+    //Serial.print("MM target set to: ");
     Serial.println(targetMM);
 
     while (Serial.available()) {
@@ -89,5 +89,5 @@ void retract() {
 void stop() {
   analogWrite(pinA, 0);
   analogWrite(pinB, 0);
-  //Serial.println("b high: Retract");
+  //Serial.println("both low: Stop");
 }
