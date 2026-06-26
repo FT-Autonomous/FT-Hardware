@@ -1,6 +1,10 @@
-Steering Code Folder
-This folder contains the steering, motor, sensor, arming, and some test code used for Rigby
-Folder Structure
+# Steering Code Folder
+
+This folder contains the steering, motor, sensor, arming, and test code used for **Rigby**.
+
+## Folder Structure
+
+```text
 Code/Steering/
 ├── Steering-Final-Version/
 │   └── WorkingS_PID_Final/
@@ -14,42 +18,72 @@ Code/Steering/
 │   └── LED_Button_Check/
 └── arming_seq/
     └── arming_sequence/
+```
 
-Sections
-Steering-Final-Version/
-Contains the Up to date working steering code.
+## Sections
+
+### `Steering-Final-Version/`
+
+Contains the up-to-date working steering code.
+
 Main folder:
-    • WorkingS_PID_Final/
+
+* `WorkingS_PID_Final/`
+
 This contains the current working PID steering implementation.
+
 Main files:
-    • WorkingS_PID_Final.ino - main working steering PID sketch
-    • Arming_seq_Steering_working.ino – working arming seq logic for ESP-32 
 
-Test-Steering-Conor/
-Contains Conor's steering code version (The one found on the FT docs steering section)
+* `WorkingS_PID_Final.ino` - main working steering PID sketch
+* `Arming_seq_Steering_working.ino` - working arming sequence logic for the ESP32
+
+---
+
+### `Test-Steering-Conor/`
+
+Contains Conor's steering code version, this is the version found in the FT Docs steering section.
+
 Main folder:
-    • SteeringCode/
-Subfolders:
-    • GetPotentiometerReadings/ -> tests potentiometer values.
-    • SteeringWithPotCode/ -> Working steering code using potentiometer feedback.
-    • TestSteeringCode/ -> steering test sketch.
-    • new_steering_code/ → Older steering code setup.
-This folder is kept as a separate reference/development version.
 
-Motor/
-Contains The main code for checking motor speed, encoder, TOF, and demo-run code.
-Subfolders:
-    • Encoder-Code/ - encoder reading code, This controls speed and checks current speed.
-    • FT_TOF/
-    • FT_Demo_Run/ - demo run code for motor/steering testing
+* `SteeringCode/`
 
-tests/
-Contains small test sketches.
 Subfolders:
-    • LED_Button_Check/ - Tests RGB LED + Button for state change
 
-arming_seq/
+* `GetPotentiometerReadings/` - tests potentiometer values
+* `SteeringWithPotCode/` - steering code using pot 
+* `TestSteeringCode/` - steering test sketch
+* `new_steering_code/` - older steering code setup
+
+---
+
+### `Motor/`
+
+Contains the main code for checking motor speed, encoder feedbacd & TOF code.
+
+Subfolders:
+
+* `Encoder-Code/` - encoder reading code used to monitor/check motor speed
+* `FT_TOF/` - time-of-flight sensor code
+* `FT_Demo_Run/` - demo run code for motor/steering testing
+
+---
+
+### `tests/`
+
+Contains small test files.
+
+Subfolders:
+
+* `LED_Button_Check/` - tests RGB LED and button state changes
+
+---
+
+### `arming_seq/`
+
 Contains standalone arming sequence code.
+
 Subfolders:
-    • arming_sequence/ - raw arming sequence sketch
-This is separate from the steering versions so the arming logic can be tested independently.
+
+* `arming_sequence/` - raw standalone arming sequence sketch
+
+This is separate from * `Arming_seq_Steering_working.ino` that one is setup to work with steering and Pot 
