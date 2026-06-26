@@ -1,11 +1,11 @@
-
+/*
 void wifiSetup(){
   
   WiFi.begin(ssid, pass);
   IPAddress ip = WiFi.localIP();  //get the IP
   IPAddress vip = WiFi.localIP();  //get the IP
   Serial.println(ip);             //print IP so it can be easily added to the processing code
-z
+
 
   while(ip == vip){
     WiFi.begin(ssid, pass);
@@ -87,3 +87,5 @@ void sendUpdate(){
     laptop.write(count);
   }
 }
+
+//*/

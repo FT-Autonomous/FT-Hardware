@@ -40,7 +40,7 @@ void loop() {
   }
 }
 
-int updateTarget() {
+int updateTarget() { //des
   if (Serial.available() > 0) {
     int newTarget = Serial.parseInt();
 

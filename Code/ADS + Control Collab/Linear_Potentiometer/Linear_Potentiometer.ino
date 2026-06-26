@@ -1,4 +1,4 @@
-const int potentiometerPin = A3;
+const int potentiometerPin = 35;
 
 const float sliderTravelMM = 100.0;
 
@@ -12,7 +12,7 @@ void setup() {
 void loop() {
   int rawValue = analogRead(potentiometerPin);
 
-  float percentage = rawValue / 1023.0;
+  float percentage = rawValue / 4095.0;
   currentSliderMM = percentage * sliderTravelMM;
 
   Serial.print("Raw: ");
