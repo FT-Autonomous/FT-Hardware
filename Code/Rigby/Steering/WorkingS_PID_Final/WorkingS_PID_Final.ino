@@ -1,3 +1,8 @@
+//Latest code as of 16/06/2026 (Passed all tests so this is the main code)
+// The CODE WORKS despite the alligations that it does not, tested it again using a diffrent pot
+// The issue? the wires to the pot are not secured, values get stuck to a fixed value (0 in this case)
+
+
 int pot = A3; // Analog read
 int MOTOR_B = 5; // DC Motor that contorls the steering module
 int MOTOR_F = 6;
@@ -10,12 +15,11 @@ int MOTOR_F = 6;
 // Youtube vids and arduino forms are worth looking at, They have hidden gems that you can adapt to work like below:
 
 //Update: it worked!!, for future refrence always check if the electronics are kaput, that will save you time, and sanity and and and and and and .... 
-// One thing left to do: Check the pot, the readings are not present here, idk why or how but that should 
 
 
 void setup() {
 
- Serial.begin(9600);
+ Serial.begin(115200);
  Serial.setTimeout(1000); 
  pinMode(pot, INPUT);
  pinMode(MOTOR_F,OUTPUT);
@@ -28,16 +32,22 @@ void setup() {
 
 }
 
-float angle_target; // Ideally start @Zero 
+float angle_target = 0.0;; // Ideally start @Zero 
 float angle_current = 0.0; // Float works for now, round off happens down in line 56
 float angle_current_raw = 0.0;
 float error = 0;
+bool emergencyStop = false; // For sudden stop when needed
 
-float kp = 1.2;
-float angle_max = 10; 
+
+float pot_min = 447;
+float pot_max = 591; // so these here are the angle values (roughly), for max L, C, max R
+float center = 520;
+
+float kp = 10;
+float angle_max = 17.5; 
 
 unsigned long lastTime = 0;
-unsigned long sample = 20;   // smol boy when running (10–20 ms) and big when debug
+unsigned long sample = 10;   // smol boy when running (10–20 ms) and big when debug
 
 void loop() {
   unsigned long currentTime = millis();
@@ -52,46 +62,53 @@ void loop() {
   if(currentTime - lastTime >= sample)
   {
     lastTime = currentTime; // update 
-    float pot_ang = analogRead(pot); // I hate this (hear me out float == decimal == round it off == better? idk its convoluted but it works)
-    angle_current = map(pot_ang, 0 , 1023, -angle_max, angle_max); // TL;DR match the limits to the pot
+    int pot_ang = analogRead(pot); // I hate this (hear me out float == decimal == round it off == better? idk its convoluted but it works)
+    pot_ang = constrain(pot_ang, pot_min, pot_max); // map the range again just to stay safe
+    //angle_current = map(pot_ang, 0 , 1023, -angle_max, angle_max); // TL;DR match the limits to the pot
+    angle_current = (float)(pot_ang - pot_min) * (angle_max - (-angle_max)) / (pot_max - pot_min) + (-angle_max); // you convert the pot reading in deg and then
 
-    angle_current = round(angle_current_raw * 10) / 10;
+
+    //angle_current = round(angle_current_raw * 10) / 10;
     error = angle_target - angle_current; // the diffrence is how we compute the PID
     // Now we should scale the PWM in a range with the pot:
     int pwm = abs(error * kp * (255.0 / angle_max));
     pwm = constrain(pwm, 0, 255); // Possible issue with the limit of pwm, wraps value like a clock
 
-   // if(pwm > 255) 
-   //   pwm = 255;
-   // else if(pwm < 0)
-   //   pwm = 0;
 
 
-    // An idea: (if this is does not work im *redacted* myself)
-    // Control the motor direction using simple if
-    float range = 1;
+    float range = 0.4;
     if (error >= range) //if error is greater than 1
     {
       analogWrite(MOTOR_F, 0);    
       analogWrite(MOTOR_B, pwm);  // Go left (or right can't rememeber)
+      Serial.print("L");
+
     }
    else if (error <= -range) //if error is greater than -1 but not greatrer than 1
     {
       analogWrite(MOTOR_F, pwm);    
-      analogWrite(MOTOR_B, 0);  // Go left (or right can't rememeber)
+      analogWrite(MOTOR_B, 0);  // Go right (or left can't rememeber)
+      Serial.print("R");
     }
-   else //if error is less than 1 and less than -1 
+   else if (error = 's') //This won't work, will need to chnage the 
+    {
+     analogWrite(MOTOR_F, 0);    
+     analogWrite(MOTOR_B, 0);  // think of it as an E-break
+     Serial.print("E stop");
+    }
+   else //the steering angle should always center itself back to 0 unless input chnages
    {
      analogWrite(MOTOR_F, 0);    
      analogWrite(MOTOR_B, 0);  // STOOOOOOOP, if not vittu
+     Serial.print("Your move blud");
    } 
 
-   // Print and hope this thing works if not, i give up
+   // Print and hope this thing works
     Serial.print("Target: "); Serial.print(angle_target);
-    Serial.print(" | Current: "); Serial.print(angle_current_raw);
+    Serial.print(" | Current: "); Serial.print(angle_current);
     Serial.print(" | Err: "); Serial.print(error);
-    Serial.print(" | PWM: "); Serial.println(pwm);
-
+    Serial.print(" | PWM: "); Serial.print(pwm);
+    Serial.print(" | ANGLE: "); Serial.println(pot_ang);
   }
 }
 
