@@ -1,14 +1,22 @@
+// ASSI for new 2x 3-channel LED hardware
+// LED 2 channels are used for ASSI output.
+
+extern bool selected;
 
 bool asOff, asReady, asDriving, asFinished, asEmergency, manualD;
 
 bool notReady;  // this means timer elapsed without entering go.
 
-bool EBS, done, moving, go;  //Serial variables: Emergency Break system, Mission done and currently moving
+bool EBS, done, moving, go;  // Serial variables: Emergency Brake System, mission done and currently moving
 
-int yellow, blue; //yellow and blue being the colors of the corresponding LEDs
 double initialT;
 
-//run this function in setup to ready everything needed for the ASSI functionw
+// New hardware: LED 2 is the 3-channel ASSI LED
+const int assiPinA = 6;
+const int assiPinB = 5;
+const int assiPinC = 3;
+
+//run this function in setup to ready everything needed for the ASSI function
 void ASSI_Setup() {
   //initalise default/starting states
   asOff = false;
@@ -20,43 +28,53 @@ void ASSI_Setup() {
   notReady = false;
 
   //intilise pins
+  pinMode(assiPinA, OUTPUT);
+  pinMode(assiPinB, OUTPUT);
+  pinMode(assiPinC, OUTPUT);
 
-  yellow = 4;
-  blue = 5;
-  pinMode(yellow, OUTPUT);
-  pinMode(blue, OUTPUT);
+  ASSI_LED_Off();
+}
+
+void ASSI_LED_Off() {
+  analogWrite(assiPinA, 0);
+  analogWrite(assiPinB, 0);
+  analogWrite(assiPinC, 0);
+}
+
+void ASSI_LED_Set(bool A, bool B, bool C) {
+  analogWrite(assiPinA, A ? 255 : 0);
+  analogWrite(assiPinB, B ? 255 : 0);
+  analogWrite(assiPinC, C ? 255 : 0);
 }
 
 // Set the ASSI LEDs according to global booleans
 void ASSI_LED() {
   if (asOff) {
-    digitalWrite(yellow, LOW);
-    digitalWrite(blue, LOW);
+    ASSI_LED_Off();
   }
 
   if (asReady) {
-    digitalWrite(yellow, HIGH);
-    digitalWrite(blue, LOW);
+    ASSI_LED_Set(true, true, false);
   }
 
   if (asDriving) {
-    blink2(yellow);
-    digitalWrite(blue, LOW);
+    blink2(assiPinA);
+    analogWrite(assiPinB, 255);
+    analogWrite(assiPinC, 0);
   }
 
   if (asFinished) {
-    digitalWrite(yellow, LOW);
-    digitalWrite(blue, HIGH);
+    ASSI_LED_Set(false, false, true);
   }
 
   if (asEmergency) {
-    blink2(blue);
-    digitalWrite(yellow, LOW);
+    blink2(assiPinC);
+    analogWrite(assiPinA, 0);
+    analogWrite(assiPinB, 0);
   }
 
   if (manualD) {
-    digitalWrite(yellow, HIGH);
-    digitalWrite(blue, HIGH);
+    ASSI_LED_Set(true, true, true);
   }
 }
 
@@ -67,7 +85,7 @@ void ASSI() {
   if (asEmergency == false) {
 
     if (EBS) {            //if EBS is engaged
-      asDriving = false;  //couldnt possibly be driving if break is pulled
+      asDriving = false;  //couldnt possibly be driving if brake is pulled
       asReady = false;
       if (!moving && done) {
         asFinished = true;
@@ -79,7 +97,7 @@ void ASSI() {
       if (selected && !notReady) {
 
         if (!asReady) {
-          initialT = (millis() / 1000);  //start the timer for asReady
+          initialT = (millis() / 1000.0);  //start the timer for asReady
         }
 
         asReady = true;
@@ -91,7 +109,7 @@ void ASSI() {
     }
 
     if (asReady && !asDriving) {
-      timer = (millis() / 1000) - initialT;  //update timer
+      timer = (millis() / 1000.0) - initialT;  //update timer
 
       if ((timer >= 5) && (timer < 30) && go) {
         asReady = false;

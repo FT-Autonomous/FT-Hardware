@@ -1,3 +1,5 @@
+/*
+
 // RGB LED pin colour mapper test
 // Hold Button 1 to test LED 1
 // Hold Button 2 to test LED 2
@@ -93,3 +95,6 @@ void allOff() {
   analogWrite(led2_pinB, 0);
   analogWrite(led2_pinC, 0);
 }
+
+
+//*/

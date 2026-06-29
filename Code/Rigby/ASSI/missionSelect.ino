@@ -1,3 +1,5 @@
+// Mission select for new 2x 3-channel LED hardware
+// LED 1 channels are used to display missions 1-7 as binary combinations.
 
 bool firstBlink = true;
 double prevT, currT;
@@ -7,18 +9,28 @@ double prevT2, currT2;
 
 //************************************
 
-const int ledPinMax = 12;
-const int ledPinMin = 6;  //pin range of LED array mission select
+const int missionMin = 1;
+const int missionMax = 7;
 
-int mode = ledPinMin;  //test
+// New hardware: LED 1 is the 3-channel mission-select LED
+const int missionPinA = 9;
+const int missionPinB = 10;
+const int missionPinC = 11;
+
+int mode = missionMin;
 int prevMode = mode;
 
 const int cyclePin = 2;
-
-const int selectPin = 3;
+const int selectPin = 4;
 
 bool selected = false;
-bool interrupted = false;
+
+// Button polling, because pin 4 is not an interrupt pin on Arduino Uno/Nano
+bool lastCycleState = HIGH;
+bool lastSelectState = HIGH;
+unsigned long lastCycleT = 0;
+unsigned long lastSelectT = 0;
+const unsigned long debounceDelay = 50;
 
 //************************************
 
@@ -26,91 +38,108 @@ void setup() {
   Serial.begin(9600);
 
   ASSI_Setup();
-  //initialise all the pins needed for the ASSI LEDs and buttons 
-  
-  for (int i = ledPinMin; i < ledPinMax; i++) {
-    pinMode(i, OUTPUT);
-  }  //set pinmode for missionSelect LED range
 
-  pinMode(cyclePin, INPUT);
-  pinMode(selectPin, INPUT);
+  pinMode(missionPinA, OUTPUT);
+  pinMode(missionPinB, OUTPUT);
+  pinMode(missionPinC, OUTPUT);
 
-  attachInterrupt(digitalPinToInterrupt(cyclePin), cycleButton, RISING);
-  attachInterrupt(digitalPinToInterrupt(selectPin), selectButton, RISING);
+  pinMode(cyclePin, INPUT_PULLUP);
+  pinMode(selectPin, INPUT_PULLUP);
+
+  missionLEDOff();
 }
 
 void cycleButton() {
-  if (!interrupted && !selected) {  //this was set as while for some reason, I see no reason for this and dont remember it having caused an issue before so now using IF instead
+  if (!selected) {
     mode++;
-    interrupted = true;
+
+    if (mode > missionMax) {
+      mode = missionMin;
+    }
+
+    missionLEDOff();
+    prevMode = mode;
+    firstBlink = true;
   }
-}  // code that cycles mode when appropriate button pressed
+}
 
 void selectButton() {
-  //selected = true;
+  selected = true;
+  setMissionLED(mode);
+}
+
+void checkButtons() {
+  bool cycleState = digitalRead(cyclePin);
+  bool selectState = digitalRead(selectPin);
+  unsigned long now = millis();
+
+  if (lastCycleState == HIGH && cycleState == LOW && (now - lastCycleT) > debounceDelay) {
+    cycleButton();
+    lastCycleT = now;
+  }
+
+  if (lastSelectState == HIGH && selectState == LOW && (now - lastSelectT) > debounceDelay) {
+    selectButton();
+    lastSelectT = now;
+  }
+
+  lastCycleState = cycleState;
+  lastSelectState = selectState;
 }
 
 void loop() {
+  checkButtons();
 
-  if (!selected) {  // if no mode has been selected yet
-    blink(mode);    //blink the LED corresponding to the current mode being conidered
-    Serial.println(mode);
+  if (!selected) {
+    blink(mode);
   } else {
-    digitalWrite(mode, HIGH);  //display chosen mode
-  }
-
-  if (mode > ledPinMax) {
-    mode = ledPinMin;
-  }  //loop back around if we have cycled out of bounds
-
-  if (prevMode > ledPinMax) {
-    prevMode = ledPinMin;
-    interrupted = false;
-  }
-
-  if (mode != prevMode) {
-    digitalWrite(prevMode, LOW);
-    prevMode = mode;
-    firstBlink = true;
-    delay(250);
-    interrupted = false;
-  }
-
-  if (selected)
+    setMissionLED(mode);
     checkSerial();
+  }
 
   ASSI();
 }
 
-// Cleavon was here
-void blink(int Pin) {
-  currT = (millis() / 1000);  //get time in integer seconds
+void setMissionLED(int mission) {
+  // Mission 1-7 are the 7 non-zero binary combinations of the 3 LED channels.
+  analogWrite(missionPinA, (mission & 0b001) ? 255 : 0);
+  analogWrite(missionPinB, (mission & 0b010) ? 255 : 0);
+  analogWrite(missionPinC, (mission & 0b100) ? 255 : 0);
+}
 
-  if (firstBlink) {           //if we only just started blinking
-    digitalWrite(Pin, HIGH);  //on
-    prevT = currT;            //save current time
+void missionLEDOff() {
+  analogWrite(missionPinA, 0);
+  analogWrite(missionPinB, 0);
+  analogWrite(missionPinC, 0);
+}
 
-    firstBlink = false;                //set false
-  } else if ((currT - prevT) > 0.5) {  //if firstblink is false and the current time is 2 seconds greater than previous time
-    digitalWrite(Pin, LOW);            //set off
+void blink(int mission) {
+  currT = (millis() / 1000.0);
 
-    if ((currT - prevT) > 1) {  //delay another 2 seconds before changing states
+  if (firstBlink) {
+    setMissionLED(mission);
+    prevT = currT;
+    firstBlink = false;
+  } else if ((currT - prevT) > 0.5) {
+    missionLEDOff();
+
+    if ((currT - prevT) > 1) {
       firstBlink = true;
     }
   }
 }
+
 void blink2(int Pin) {
-  currT2 = (millis() / 1000);  //get time in integer seconds
+  currT2 = (millis() / 1000.0);
 
-  if (firstBlink2) {          //if we only just started blinking
-    digitalWrite(Pin, HIGH);  //on
-    prevT2 = currT2;          //save current time
+  if (firstBlink2) {
+    analogWrite(Pin, 255);
+    prevT2 = currT2;
+    firstBlink2 = false;
+  } else if ((currT2 - prevT2) > 0.5) {
+    analogWrite(Pin, 0);
 
-    firstBlink2 = false;                 //set false
-  } else if ((currT2 - prevT2) > 0.5) {  //if firstblink is false and the current time is 2 seconds greater than previous time
-    digitalWrite(Pin, LOW);              //set off
-
-    if ((currT2 - prevT2) > 1) {  //delay another 2 seconds before changing states
+    if ((currT2 - prevT2) > 1) {
       firstBlink2 = true;
     }
   }
