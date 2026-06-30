@@ -5,6 +5,9 @@ int L_En = 25;  //D2
 int R_En = 13;  //D7
 // D2 Len D7 Ren
 
+bool on;
+bool go;
+
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
@@ -17,13 +20,16 @@ void setup() {
 
   disarmAll();
   armEnable();  // toggle Enables pins High
+
+  on = false;
+  go = true;
+  Serial.print("ON: ");
+  Serial.println(on);
 }
 
 int st = 1000;  // delay
-int aVal = 100;
-int bVal = 100;
+//int aVal = 100;int bVal = 100;
 
-bool on = false;
 void loop() {
   if (on) {
     digitalWrite(pinA, LOW);
@@ -35,9 +41,15 @@ void loop() {
     //armEnable();
 
     digitalWrite(pinA, HIGH);
-    Serial.println("A high: Extend");
+    Serial.print("A high: Extend");
 
     delay(st);
+    if (!go) {
+      Serial.print(" (enter 'r' to Retract)");
+      while (Serial.read() != 'r'){}
+      //Wait for request for retraction
+    }
+    Serial.println();
 
     digitalWrite(pinA, LOW);
     Serial.println("both low");
@@ -45,30 +57,31 @@ void loop() {
     delay(st);
 
     digitalWrite(pinB, HIGH);
-    Serial.println("b high: Retract");
+    Serial.print("B high: Retract");
 
     delay(st);
+    if (!go) {
+      Serial.print(" (enter 'e' to extend)");
+      while (Serial.read() != 'e'){}
+      //Wait for request for extension
+    }
+    Serial.println();
+
     digitalWrite(pinB, LOW);
     Serial.println("----------------------");
   }
-
-  if (Serial.read() == 'p') {
+  
+  char curr = Serial.read();
+  if (curr == 'p') {
     //receiving the char p over serial pauses and unpauses the loop (this is functional)
     on = !on;
     Serial.print("ON: ");
     Serial.println(on);
   }
+
+  else if (curr == 'g')
+    go = !go;
 }  //end loop
-
-void a(int state) {
-  state = floor(255 * state / 10);
-  analogWrite(pinA, state);
-}  //set A to state percent power
-
-void b(int state) {
-  state = floor(255 * state / 10);
-  analogWrite(pinB, state);
-}
 
 void disarmAll() {
   // the level shifters are on by default so we need to start with digital low
