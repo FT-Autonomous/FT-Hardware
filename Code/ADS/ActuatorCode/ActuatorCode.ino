@@ -15,53 +15,50 @@ void setup() {
   pinMode(L_En, OUTPUT);
   pinMode(R_En, OUTPUT);
 
-  disarmAll();  
+  disarmAll();
   armEnable();  // toggle Enables pins High
 }
 
 int st = 1000;  // delay
 int aVal = 100;
 int bVal = 100;
-bool on = false;
 
+bool on = false;
 void loop() {
   if (on) {
-    // put your main code here, to run repeatedly:
-    a(0);
-    b(0);
+    digitalWrite(pinA, LOW);
+    digitalWrite(pinB, LOW);
     Serial.println("both low");
 
     delay(st);
 
-    armEnable();
-    
-    a(aVal);
+    //armEnable();
+
+    digitalWrite(pinA, HIGH);
     Serial.println("A high: Extend");
 
     delay(st);
 
-    a(0);
+    digitalWrite(pinA, LOW);
     Serial.println("both low");
 
     delay(st);
 
-    b(bVal);
+    digitalWrite(pinB, HIGH);
     Serial.println("b high: Retract");
 
     delay(st);
-
+    digitalWrite(pinB, LOW);
     Serial.println("----------------------");
   }
-  else
-    disarmAll();
 
-  if(Serial.read() == 'c'){
+  if (Serial.read() == 'p') {
+    //receiving the char p over serial pauses and unpauses the loop (this is functional)
     on = !on;
-    Serial.print( "ON: " );
-    Serial.println( on );
+    Serial.print("ON: ");
+    Serial.println(on);
   }
-
-}
+}  //end loop
 
 void a(int state) {
   state = floor(255 * state / 10);
@@ -73,21 +70,20 @@ void b(int state) {
   analogWrite(pinB, state);
 }
 
-void disarmAll(){
+void disarmAll() {
   // the level shifters are on by default so we need to start with digital low
-  digitalWrite(pinA; LOW);
-  digitalWrite(pinB; LOW);
+  digitalWrite(pinA, LOW);
+  digitalWrite(pinB, LOW);
 
   disarmEnable();
-  
 }
 
-void armEnable(){
+void armEnable() {
   digitalWrite(L_En, HIGH);
   digitalWrite(R_En, HIGH);
 }
 
-void disarmEnable(){
-  digitalWrite(L_En; LOW);
-  digitalWrite(R_En; LOW);
+void disarmEnable() {
+  digitalWrite(L_En, LOW);
+  digitalWrite(R_En, LOW);
 }
